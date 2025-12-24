@@ -9,6 +9,8 @@ import GuidancePage from '@/components/pages/GuidancePage';
 import SearchPage from '@/components/pages/SearchPage';
 import SkillTestPage from '@/components/pages/SkillTestPage';
 import CareerComparePage from '@/components/pages/CareerComparePage';
+import AIMentorPage from '@/components/pages/AIMentorPage';
+import ExamsPage from '@/components/pages/ExamsPage';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -53,6 +55,14 @@ const router = createBrowserRouter([
       {
         path: "career-compare",
         element: <CareerComparePage />,
+      },
+      {
+        path: "exams",
+        element: <ExamsPage />,
+      },
+      {
+        path: "ai-mentor",
+        element: <AIMentorPage />,
       },
       {
         path: "*",

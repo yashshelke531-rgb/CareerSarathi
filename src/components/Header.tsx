@@ -57,6 +57,22 @@ export default function Header() {
               Career Compare
             </Link>
             <Link
+              to="/exams"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/exams') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              Exams
+            </Link>
+            <Link
+              to="/ai-mentor"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/ai-mentor') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              AI Mentor
+            </Link>
+            <Link
               to="/guidance"
               className={`font-paragraph text-base transition-colors ${
                 isActive('/guidance') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
