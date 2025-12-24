@@ -11,6 +11,7 @@ import SkillTestPage from '@/components/pages/SkillTestPage';
 import CareerComparePage from '@/components/pages/CareerComparePage';
 import AIMentorPage from '@/components/pages/AIMentorPage';
 import ExamsPage from '@/components/pages/ExamsPage';
+import ExamDetailPage from '@/components/pages/ExamDetailPage';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: "exams",
         element: <ExamsPage />,
+      },
+      {
+        path: "exam/:id",
+        element: <ExamDetailPage />,
       },
       {
         path: "ai-mentor",

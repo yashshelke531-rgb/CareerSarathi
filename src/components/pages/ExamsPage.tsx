@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, DollarSign, FileText, Trophy, Clock, Users, BookOpen, Target, ArrowRight, Search as SearchIcon, Filter } from 'lucide-react';
 import Header from '@/components/Header';
@@ -18,7 +19,6 @@ export default function ExamsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedExam, setExpandedExam] = useState<string | null>(null);
 
   useEffect(() => {
     loadExams();
@@ -259,35 +259,14 @@ export default function ExamsPage() {
                       </div>
                     </div>
 
-                    {/* Expandable Details */}
-                    <motion.div
-                      initial={false}
-                      animate={{ height: expandedExam === exam._id ? 'auto' : 0, opacity: expandedExam === exam._id ? 1 : 0 }}
-                      className="overflow-hidden mb-6"
-                    >
-                      <div className="pt-4 border-t border-primary/10 space-y-4">
-                        {exam.eligibilityCriteria && (
-                          <div>
-                            <h4 className="font-heading text-sm font-bold text-primary mb-2 flex items-center gap-2">
-                              <Target className="w-4 h-4" />
-                              Eligibility Criteria
-                            </h4>
-                            <p className="font-paragraph text-sm text-primary/70">
-                              {exam.eligibilityCriteria}
-                            </p>
-                          </div>
-                        )}
-                      </div>
-                    </motion.div>
-
                     {/* Action Buttons */}
                     <div className="flex gap-3">
-                      <button
-                        onClick={() => setExpandedExam(expandedExam === exam._id ? null : exam._id)}
-                        className="flex-1 px-4 py-3 bg-background text-primary font-paragraph text-base font-semibold rounded-lg hover:bg-primary/10 transition-colors"
+                      <Link
+                        to={`/exam/${exam._id}`}
+                        className="flex-1 px-4 py-3 bg-background text-primary font-paragraph text-base font-semibold rounded-lg hover:bg-primary/10 transition-colors text-center"
                       >
-                        {expandedExam === exam._id ? 'Show Less' : 'Show More'}
-                      </button>
+                        View Details
+                      </Link>
                       {exam.officialWebsite && (
                         <a
                           href={exam.officialWebsite}
