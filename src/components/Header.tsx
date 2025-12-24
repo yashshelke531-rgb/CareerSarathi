@@ -20,7 +20,7 @@ export default function Header() {
       <div className="max-w-[120rem] mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="font-heading text-2xl font-bold text-primary">
-            CareerSati
+            Career Sarathi
           </Link>
 
           <nav className="hidden md:flex items-center gap-8">
@@ -39,6 +39,22 @@ export default function Header() {
               }`}
             >
               Explore Careers
+            </Link>
+            <Link
+              to="/skill-test"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/skill-test') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              Skill Test
+            </Link>
+            <Link
+              to="/career-compare"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/career-compare') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              Career Compare
             </Link>
             <Link
               to="/guidance"
