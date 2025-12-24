@@ -204,9 +204,7 @@ export default function HomePage() {
           border-radius: 20px;
         }
       `}</style>
-
       <Header />
-
       {/* --- HERO SECTION --- */}
       <section className="relative w-full min-h-screen flex flex-col justify-center pt-20 lg:pt-0 overflow-hidden">
         {/* Background Elements */}
@@ -295,7 +293,7 @@ export default function HomePage() {
                       <Brain className="w-8 h-8 text-secondary" />
                       <h3 className="font-heading text-xl font-bold">AI Analysis</h3>
                     </div>
-                    <p className="text-sm text-primary-foreground/80 leading-relaxed">
+                    <p className="text-sm leading-relaxed text-primary-foreground">
                       "Based on your skills, Software Engineering aligns 94% with your profile."
                     </p>
                   </motion.div>
@@ -308,7 +306,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* --- STATS TICKER SECTION --- */}
       <section className="w-full border-y border-primary/10 bg-white/30 backdrop-blur-sm overflow-hidden py-8">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -332,7 +329,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* --- AI MENTOR SECTION (Sticky/Interactive) --- */}
       <section id="ai-mentor" className="relative w-full py-32 overflow-hidden">
         <div className="max-w-[120rem] mx-auto px-6 lg:px-12">
@@ -451,7 +447,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* --- FEATURED IMAGE BREAK --- */}
       <section className="w-full py-12">
         <div className="max-w-[120rem] mx-auto px-6">
@@ -475,7 +470,6 @@ export default function HomePage() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* --- GUIDANCE GRID SECTION --- */}
       <section className="w-full py-32 bg-white/50 backdrop-blur-sm">
         <div className="max-w-[120rem] mx-auto px-6 lg:px-12">
@@ -530,7 +524,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       {/* --- CTA SECTION --- */}
       <section className="w-full py-32 overflow-hidden">
         <div className="max-w-[100rem] mx-auto px-6">
@@ -567,7 +560,6 @@ export default function HomePage() {
           </AnimatedElement>
         </div>
       </section>
-
       <Footer />
     </div>
   );
