@@ -84,13 +84,22 @@ export default function CareerDetailPage() {
           className="bg-white rounded-2xl overflow-hidden shadow-xl"
         >
           {career.careerImage && (
-            <div className="h-96 overflow-hidden">
+            <div className="h-96 overflow-hidden relative">
               <Image
                 src={career.careerImage}
                 alt={career.careerName || 'Career'}
                 className="w-full h-full object-cover"
                 width={1200}
               />
+              {/* Salary Badge Overlay */}
+              <div className="absolute top-6 right-6 bg-secondary text-secondary-foreground px-6 py-3 rounded-xl shadow-lg">
+                <p className="font-heading text-sm font-semibold text-secondary-foreground/80 mb-1">
+                  Average Salary
+                </p>
+                <p className="font-heading text-3xl font-bold text-secondary-foreground">
+                  {formatCurrency(career.averageSalary)}
+                </p>
+              </div>
             </div>
           )}
 
@@ -99,18 +108,8 @@ export default function CareerDetailPage() {
               {career.careerName}
             </h1>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-              <div className="bg-secondary p-6 rounded-lg">
-                <DollarSign className="w-8 h-8 text-secondary-foreground mb-3" />
-                <h3 className="font-heading text-sm font-semibold text-secondary-foreground/70 mb-1">
-                  Average Salary
-                </h3>
-                <p className="font-heading text-2xl font-bold text-secondary-foreground">
-                  {formatCurrency(career.averageSalary)}
-                </p>
-              </div>
-
-              <div className="bg-background p-6 rounded-lg">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-background p-6 rounded-lg border-2 border-secondary">
                 <TrendingUp className="w-8 h-8 text-primary mb-3" />
                 <h3 className="font-heading text-sm font-semibold text-primary/70 mb-1">
                   Growth Outlook
