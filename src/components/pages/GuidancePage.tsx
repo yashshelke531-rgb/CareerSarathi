@@ -16,7 +16,7 @@ export default function GuidancePage() {
   
   // Initial AI Questions State
   const [showInitialQuestions, setShowInitialQuestions] = useState(true);
-  const [initialAnswers, setInitialAnswers] = useState<Record<number, string>>({});
+  const [initialAnswers, setInitialAnswers] = useState<Record<number, { label: string; interests: string[] }>>({});
   const [userInterests, setUserInterests] = useState<string[]>([]);
 
   useEffect(() => {
@@ -34,33 +34,70 @@ export default function GuidancePage() {
     setLoading(false);
   };
 
-  // Initial AI Questions
+  // Initial AI Questions with career interest mapping
   const initialQuestions = [
     {
       id: 1,
-      question: "What interests you the most?",
-      options: ["Technology & Innovation", "Business & Finance", "Healthcare & Science", "Creative & Arts", "Education & Research"]
+      question: "Which field excites you the most?",
+      options: [
+        { label: "Technology & Software Development", interests: ["Technology", "IT", "Engineering"] },
+        { label: "Healthcare & Medical Sciences", interests: ["Healthcare", "Medical", "Science"] },
+        { label: "Business & Finance", interests: ["Business", "Finance", "Banking"] },
+        { label: "Creative & Design", interests: ["Creative", "Arts", "Design"] },
+        { label: "Education & Research", interests: ["Education", "Research", "Science"] }
+      ]
     },
     {
       id: 2,
-      question: "What's your preferred work environment?",
-      options: ["Fast-paced & Dynamic", "Structured & Organized", "Collaborative & Team-based", "Independent & Flexible", "Outdoor & Active"]
+      question: "What type of work activities do you enjoy most?",
+      options: [
+        { label: "Problem-solving & Analysis", interests: ["Engineering", "Technology", "Research"] },
+        { label: "Working with People & Communication", interests: ["Business", "Education", "Healthcare"] },
+        { label: "Creating & Building Things", interests: ["Engineering", "Creative", "Technology"] },
+        { label: "Data & Numbers", interests: ["Finance", "Business", "Technology"] },
+        { label: "Helping Others & Social Impact", interests: ["Healthcare", "Education", "Social"] }
+      ]
     },
     {
       id: 3,
-      question: "What's your primary career goal?",
-      options: ["High Income", "Job Security", "Work-Life Balance", "Social Impact", "Creative Expression"]
+      question: "What's your ideal career outcome?",
+      options: [
+        { label: "High earning potential & Career growth", interests: ["Finance", "Technology", "Business"] },
+        { label: "Job security & Stable income", interests: ["Government", "Banking", "Education"] },
+        { label: "Making a positive impact on society", interests: ["Healthcare", "Education", "Social"] },
+        { label: "Creative freedom & Self-expression", interests: ["Creative", "Arts", "Design"] },
+        { label: "Work-life balance & Flexibility", interests: ["Education", "Creative", "Freelance"] }
+      ]
     }
   ];
 
-  const handleInitialAnswer = (questionId: number, answer: string) => {
-    setInitialAnswers({ ...initialAnswers, [questionId]: answer });
+  const handleInitialAnswer = (questionId: number, option: { label: string; interests: string[] }) => {
+    setInitialAnswers({ ...initialAnswers, [questionId]: option });
   };
 
   const submitInitialQuestions = () => {
     const answers = Object.values(initialAnswers);
     if (answers.length === 3) {
-      setUserInterests(answers);
+      // Aggregate all interests from selected options
+      const allInterests: string[] = [];
+      answers.forEach((answer: any) => {
+        if (answer.interests) {
+          allInterests.push(...answer.interests);
+        }
+      });
+      
+      // Count frequency of each interest to determine top interests
+      const interestCount: Record<string, number> = {};
+      allInterests.forEach(interest => {
+        interestCount[interest] = (interestCount[interest] || 0) + 1;
+      });
+      
+      // Get unique interests sorted by frequency
+      const topInterests = Object.entries(interestCount)
+        .sort((a, b) => b[1] - a[1])
+        .map(([interest]) => interest);
+      
+      setUserInterests(topInterests);
       setShowInitialQuestions(false);
     }
   };
@@ -130,16 +167,15 @@ export default function GuidancePage() {
                   </h3>
                   <div className="space-y-2">
                     {q.options.map((option) => (
-                      <label key={option} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-background transition-colors">
+                      <label key={option.label} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-background transition-colors">
                         <input
                           type="radio"
                           name={`question-${q.id}`}
-                          value={option}
-                          checked={initialAnswers[q.id] === option}
-                          onChange={(e) => handleInitialAnswer(q.id, e.target.value)}
+                          checked={initialAnswers[q.id]?.label === option.label}
+                          onChange={() => handleInitialAnswer(q.id, option)}
                           className="w-4 h-4"
                         />
-                        <span className="font-paragraph text-base text-primary">{option}</span>
+                        <span className="font-paragraph text-base text-primary">{option.label}</span>
                       </label>
                     ))}
                   </div>
@@ -164,6 +200,39 @@ export default function GuidancePage() {
             </div>
           </motion.div>
         </motion.div>
+      )}
+
+      {/* User Interests Display */}
+      {!showInitialQuestions && userInterests.length > 0 && (
+        <motion.section
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full bg-background py-8"
+        >
+          <div className="max-w-[100rem] mx-auto px-6">
+            <div className="bg-white rounded-xl p-6 border-2 border-secondary">
+              <h3 className="font-heading text-xl font-bold text-primary mb-4">
+                Your Career Interests
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {userInterests.map((interest) => (
+                  <span
+                    key={interest}
+                    className="px-4 py-2 bg-secondary text-secondary-foreground font-paragraph text-sm font-semibold rounded-full"
+                  >
+                    {interest}
+                  </span>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowInitialQuestions(true)}
+                className="mt-4 px-4 py-2 text-primary font-paragraph text-sm font-semibold hover:underline"
+              >
+                Retake Questions
+              </button>
+            </div>
+          </div>
+        </motion.section>
       )}
 
       {/* Hero Section */}
