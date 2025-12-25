@@ -96,6 +96,7 @@ export default function HomePage() {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [guidanceItems, setGuidanceItems] = useState<UserGuidance[]>([]);
+  const [showChatModal, setShowChatModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Scroll hooks for parallax
@@ -228,9 +229,9 @@ export default function HomePage() {
           border-radius: 20px;
         }
       `}</style>
-      <Header />
+      <Header onMentorClick={() => setShowChatModal(true)} />
       {/* --- HERO SECTION --- */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center pt-0 lg:pt-0 overflow-hidden">
+      <section className="relative w-full h-screen flex flex-col justify-center pt-0 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <WavePattern />
@@ -585,6 +586,108 @@ export default function HomePage() {
         </div>
       </section>
       <Footer />
+      
+      {/* AI Mentor Modal - Opens on current view without scrolling */}
+      <AnimatePresence>
+        {showChatModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowChatModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl h-[600px] bg-white rounded-[2rem] shadow-2xl border border-primary/5 overflow-hidden flex flex-col"
+            >
+              {/* Chat Header */}
+              <div className="p-6 border-b border-primary/5 bg-primary/5 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary/60" />
+                  <span className="text-sm font-medium text-primary/60 uppercase tracking-widest">CareerSati AI v1.0</span>
+                </div>
+                <button
+                  onClick={() => setShowChatModal(false)}
+                  className="text-primary/60 hover:text-primary transition-colors ml-4"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Chat Messages Area */}
+              <div className="flex-1 overflow-y-auto p-8 space-y-6 chat-scroll bg-gradient-to-b from-white to-primary/5">
+                <AnimatePresence initial={false}>
+                  {messages.map((message) => (
+                    <motion.div
+                      key={message.id}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    >
+                      <div
+                        className={`max-w-[80%] p-4 rounded-2xl shadow-sm ${
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground rounded-tr-none'
+                            : 'bg-white border border-primary/10 text-primary rounded-tl-none'
+                        }`}
+                      >
+                        <p className="font-paragraph text-base leading-relaxed">{message.content}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+                
+                {isTyping && (
+                  <motion.div 
+                    initial={{ opacity: 0 }} 
+                    animate={{ opacity: 1 }}
+                    className="flex justify-start"
+                  >
+                    <div className="bg-white border border-primary/10 p-3 rounded-2xl rounded-tl-none shadow-sm">
+                      <div className="flex gap-1.5">
+                        <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2 h-2 bg-primary/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+
+              {/* Input Area */}
+              <div className="p-6 bg-white border-t border-primary/5">
+                <form onSubmit={handleSendMessage} className="relative flex items-center gap-4">
+                  <input
+                    type="text"
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    placeholder="Ask about a career path..."
+                    className="w-full px-4 py-3 bg-primary/5 rounded-xl font-paragraph text-base focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-primary/40"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!inputMessage.trim()}
+                    className="absolute right-2 p-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className="w-5 h-5" />
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

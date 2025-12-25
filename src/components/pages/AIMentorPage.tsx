@@ -178,13 +178,28 @@ export default function AIMentorPage() {
   }, [messages]);
 
   const getAIResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
+    const lowerMessage = userMessage.toLowerCase().trim();
     
     // Check keyword mapping for specific topics
     for (const [keyword, responseKey] of Object.entries(KEYWORD_MAPPING)) {
       if (lowerMessage.includes(keyword)) {
         return COMPREHENSIVE_RESPONSES[responseKey];
       }
+    }
+    
+    // Intelligent fallback for any question
+    // Analyze the question and provide relevant guidance
+    if (lowerMessage.includes('?')) {
+      // It's a question - provide thoughtful guidance
+      if (lowerMessage.includes('how') || lowerMessage.includes('what') || lowerMessage.includes('why') || lowerMessage.includes('when')) {
+        return 'That\'s a great question! While I don\'t have a specific response for this topic, I can help you think through it. Career decisions involve understanding your interests, skills, values, and market opportunities. I specialize in: 1) Career exploration and guidance, 2) College and university recommendations, 3) Exam preparation strategies, 4) Skill development and learning paths, 5) Salary expectations and career growth, 6) Career transitions and changes. Could you rephrase your question to focus on any of these areas? For example, ask about specific careers, colleges, exams, or skills you\'re interested in.';
+      }
+      return 'That\'s an interesting question! I\'m your comprehensive AI Career Mentor. To give you the best guidance, could you provide more details about what you\'re looking for? Are you interested in: 1) Exploring specific careers, 2) Learning about colleges and universities, 3) Exam preparation, 4) Skill development, 5) Salary and career growth, or 6) Career transitions? Share more details and I\'ll provide comprehensive information!';
+    }
+    
+    // For statements or general topics
+    if (lowerMessage.length > 0) {
+      return 'That\'s an interesting topic! I\'m your AI Career Mentor with comprehensive knowledge about careers, colleges, exams, skills, and professional development. To provide you with the most relevant information, could you ask a specific question? For example: "Tell me about IT careers", "How do I prepare for JEE?", "What are the top colleges in Maharashtra?", "What skills should I learn?", or "What\'s the salary range for engineers?". Ask me anything career-related and I\'ll provide detailed guidance!';
     }
     
     // Fallback to default comprehensive response

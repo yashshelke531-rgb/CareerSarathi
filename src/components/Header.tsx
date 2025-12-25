@@ -1,8 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 
-export default function Header() {
+interface HeaderProps {
+  onMentorClick?: () => void;
+}
+
+export default function Header({ onMentorClick }: HeaderProps) {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -64,14 +68,21 @@ export default function Header() {
             >
               Exams
             </Link>
-            <Link
-              to="/ai-mentor"
-              className={`font-paragraph text-base transition-colors ${
+            <button
+              onClick={(e) => {
+                if (location.pathname === '/' && onMentorClick) {
+                  e.preventDefault();
+                  onMentorClick();
+                } else {
+                  window.location.href = '/ai-mentor';
+                }
+              }}
+              className={`font-paragraph text-base transition-colors cursor-pointer ${
                 isActive('/ai-mentor') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
               }`}
             >
               AI Mentor
-            </Link>
+            </button>
             <Link
               to="/guidance"
               className={`font-paragraph text-base transition-colors ${
