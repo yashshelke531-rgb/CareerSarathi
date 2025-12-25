@@ -401,7 +401,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <Sparkles className="w-4 h-4 text-primary/60" />
-                      <span className="text-sm font-medium text-primary/60 uppercase tracking-widest">CareerSati AI v1.0</span>
+                      <span className="text-sm font-medium text-primary/60 uppercase tracking-widest">{"CareerSarathii AI v1.0"}</span>
                     </div>
                   </div>
 
@@ -586,7 +586,6 @@ export default function HomePage() {
         </div>
       </section>
       <Footer />
-      
       {/* AI Mentor Modal - Opens on current view without scrolling */}
       <AnimatePresence>
         {showChatModal && (
