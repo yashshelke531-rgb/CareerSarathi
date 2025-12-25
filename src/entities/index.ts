@@ -37,6 +37,8 @@ export interface ExamsInformation {
   _createdDate?: Date;
   _updatedDate?: Date;
   /** @wixFieldType text */
+  futureExamDates?: string;
+  /** @wixFieldType text */
   examName?: string;
   /** @wixFieldType text */
   description?: string;
@@ -52,8 +54,6 @@ export interface ExamsInformation {
   examFee?: number;
   /** @wixFieldType image */
   examLogo?: string;
-  /** @wixFieldType text */
-  futureExamDates?: string;
 }
 
 
@@ -113,6 +113,8 @@ export interface PopularCareers {
   _updatedDate?: Date;
   /** @wixFieldType text */
   careerName?: string;
+  /** @wixFieldType number */
+  annualPackage?: number;
   /** @wixFieldType text */
   description?: string;
   /** @wixFieldType text */
@@ -125,8 +127,6 @@ export interface PopularCareers {
   growthOutlook?: string;
   /** @wixFieldType image */
   careerImage?: string;
-  /** @wixFieldType number */
-  annualPackage?: number;
 }
 
 
@@ -150,72 +150,4 @@ export interface UserGuidance {
   illustration?: string;
   /** @wixFieldType url */
   videoTutorialUrl?: string;
-}
-
-/**
- * Collection ID: examsyllabus
- * Interface for ExamSyllabus
- */
-export interface ExamSyllabus {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType text */
-  examId?: string;
-  /** @wixFieldType text */
-  subjectName?: string;
-  /** @wixFieldType text */
-  topicsCovered?: string;
-  /** @wixFieldType text */
-  detailedContent?: string;
-  /** @wixFieldType text */
-  syllabusVersion?: string;
-  /** @wixFieldType text */
-  examBoard?: string;
-}
-
-/**
- * Collection ID: exampreparationguides
- * Interface for ExamPreparationGuides
- */
-export interface ExamPreparationGuides {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType text */
-  guideTitle?: string;
-  /** @wixFieldType text */
-  examName?: string;
-  /** @wixFieldType text */
-  preparationStrategies?: string;
-  /** @wixFieldType text */
-  studyTips?: string;
-  /** @wixFieldType text */
-  detailedGuideContent?: string;
-  /** @wixFieldType image */
-  coverImage?: string;
-  /** @wixFieldType text */
-  difficultyLevel?: string;
-}
-
-/**
- * Collection ID: examtimetables
- * Interface for ExamTimetables
- */
-export interface ExamTimetables {
-  _id: string;
-  _createdDate?: Date;
-  _updatedDate?: Date;
-  /** @wixFieldType text */
-  examId?: string;
-  /** @wixFieldType number */
-  weekNumber?: number;
-  /** @wixFieldType text */
-  dayOfWeek?: string;
-  /** @wixFieldType text */
-  dailyPlan?: string;
-  /** @wixFieldType text */
-  topicsToCover?: string;
-  /** @wixFieldType number */
-  hoursPerDay?: number;
 }

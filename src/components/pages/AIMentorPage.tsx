@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, MessageCircle, Lightbulb, BookOpen, Briefcase, X } from 'lucide-react';
+import { Send, Sparkles, MessageCircle, Lightbulb, BookOpen, Briefcase } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
@@ -11,12 +11,125 @@ interface Message {
   timestamp: Date;
 }
 
-const SAMPLE_RESPONSES: Record<string, string> = {
-  career: "Based on your interests and skills, I'd recommend exploring careers in technology, business, or creative fields. Consider taking our Skill Test to get personalized recommendations. What specific aspect of career guidance would you like to explore?",
-  syllabus: "To help you with syllabus guidance, could you specify which exam or course you're interested in? We have comprehensive resources for competitive exams like JEE, NEET, UPSC, and many others. You can also check our Exams section for detailed exam-specific guidance.",
-  exam: "Great question! Different exams require different preparation strategies. For competitive exams, I recommend: 1) Understanding the exam pattern and syllabus, 2) Creating a study schedule, 3) Regular practice with mock tests, 4) Analyzing your performance. Visit our Exams section for detailed guidance on specific exams.",
-  skill: "Developing skills is crucial for career success. I recommend identifying skills relevant to your target career, then practicing them consistently. Our Skill Test can help you identify gaps. Would you like recommendations for specific skills?",
-  default: "That's a great question! I'm here to help with career guidance, exam preparation, syllabus information, and skill development. Could you provide more details about what you'd like to know? Feel free to ask about specific exams, careers, or learning paths."
+const COMPREHENSIVE_RESPONSES: Record<string, string> = {
+  // Career-related responses
+  career_general: "Careers are professional paths that align with your skills, interests, and values. There are thousands of career options across industries like IT, healthcare, finance, engineering, education, arts, and more. Each career has unique requirements, salary ranges, growth prospects, and work environments. I can help you explore specific careers, understand their requirements, and find the best fit for you.",
+  
+  career_it: "IT careers include Software Engineer, Data Scientist, Cloud Architect, Cybersecurity Specialist, AI/ML Engineer, and more. These roles typically require strong problem-solving skills, programming knowledge, and continuous learning. Salaries are competitive, ranging from ₹4-20+ lakhs annually. Growth opportunities are excellent with high demand globally.",
+  
+  career_healthcare: "Healthcare careers span doctors, nurses, therapists, pharmacists, medical researchers, and healthcare administrators. These require relevant degrees (MBBS, BNSc, etc.), compassion, and dedication. Salaries vary widely (₹3-30+ lakhs). Job security is excellent with consistent demand and opportunities for specialization.",
+  
+  career_finance: "Finance careers include investment banker, financial analyst, accountant, insurance agent, and financial advisor. These require strong analytical skills, certifications (CA, CFA), and attention to detail. Salaries range from ₹4-25+ lakhs. Growth is steady with opportunities in banking, stock markets, and corporate finance.",
+  
+  career_engineering: "Engineering careers cover civil, mechanical, electrical, chemical, and software engineering. These require engineering degrees and technical expertise. Salaries range from ₹3-20+ lakhs. Opportunities exist in construction, manufacturing, power, and technology sectors with good growth prospects.",
+  
+  career_education: "Teaching and education careers include teachers, professors, educational consultants, and curriculum designers. These require teaching qualifications and subject expertise. Salaries range from ₹2-15+ lakhs. Job security is good with opportunities in schools, colleges, and online platforms.",
+  
+  career_business: "Business careers include management consultant, business analyst, entrepreneur, and operations manager. These require business acumen, leadership skills, and often an MBA. Salaries range from ₹5-30+ lakhs. Growth is excellent with opportunities in startups and established companies.",
+  
+  // Exam-related responses
+  exam_general: "Competitive exams are standardized tests that determine eligibility for higher education or government jobs. Major exams include JEE (engineering), NEET (medical), UPSC (civil services), CAT (MBA), and many others. Each exam has specific syllabi, difficulty levels, and preparation strategies. Success requires consistent study, practice, and strategic planning.",
+  
+  exam_jee: "JEE (Joint Entrance Examination) has two levels: JEE Main and JEE Advanced. It's for engineering admission in top colleges like IITs. Syllabus covers Physics, Chemistry, and Mathematics. Preparation typically takes 1-2 years. Success rate is low (around 1-2%) due to high competition. Mock tests and previous year papers are essential.",
+  
+  exam_neet: "NEET (National Eligibility cum Entrance Test) is for medical and dental college admission. Syllabus includes Physics, Chemistry, and Biology. It's highly competitive with lakhs of applicants. Preparation requires 1-2 years of focused study. Coaching and consistent practice are crucial for success.",
+  
+  exam_upsc: "UPSC (Union Public Service Commission) conducts the Civil Services Examination for IAS, IPS, and IFS positions. It has three stages: Prelims, Mains, and Interview. Syllabus is vast covering history, geography, polity, economics, and current affairs. Preparation typically takes 1-2 years with strong current affairs knowledge essential.",
+  
+  exam_cat: "CAT (Common Admission Test) is for MBA admission in top business schools. It tests quantitative ability, data interpretation, and verbal reasoning. Preparation takes 3-6 months. Success opens doors to high-paying management careers. Mock tests and time management are critical.",
+  
+  // Skill-related responses
+  skill_technical: "Technical skills include programming (Python, Java, C++), web development, data analysis, cloud computing, and cybersecurity. These are in high demand across industries. Learning platforms like Coursera, Udemy, and CodeAcademy offer courses. Hands-on projects and certifications enhance employability.",
+  
+  skill_soft: "Soft skills include communication, leadership, teamwork, problem-solving, and time management. These are crucial for career success and are valued by all employers. Development comes through practice, workshops, and real-world experience. They complement technical skills for holistic growth.",
+  
+  skill_communication: "Communication skills involve clear expression, active listening, and effective presentation. These are essential in every career. Improvement comes through practice, public speaking clubs, writing, and feedback. Strong communication leads to better opportunities and career advancement.",
+  
+  skill_leadership: "Leadership skills include decision-making, team management, motivation, and strategic thinking. These are developed through experience, training, and mentorship. Leaders inspire teams, drive innovation, and achieve organizational goals. Leadership development is crucial for career progression.",
+  
+  // Salary and growth
+  salary_general: "Salaries vary widely based on education, experience, location, industry, and role. Entry-level positions typically offer ₹2-5 lakhs annually. Mid-level roles offer ₹8-15 lakhs. Senior positions offer ₹20+ lakhs. Specialized skills and certifications significantly boost earning potential.",
+  
+  growth_outlook: "Career growth depends on skill development, experience, and market demand. High-growth fields include IT, healthcare, finance, and renewable energy. Continuous learning, networking, and taking on challenging projects accelerate growth. Remote work and freelancing offer additional opportunities.",
+  
+  // Study tips
+  study_tips: "Effective study strategies include: 1) Create a structured schedule, 2) Use active recall and spaced repetition, 3) Practice with previous year papers, 4) Join study groups, 5) Take regular breaks, 6) Stay consistent, 7) Review and revise regularly, 8) Manage stress through exercise and meditation.",
+  
+  preparation_strategy: "Exam preparation requires: 1) Understanding the syllabus completely, 2) Creating a realistic timeline, 3) Using quality study materials, 4) Regular practice with mock tests, 5) Analyzing mistakes, 6) Staying updated with current affairs, 7) Managing time effectively, 8) Maintaining physical and mental health.",
+  
+  default: "That's an interesting question! I'm your comprehensive AI Career Mentor with knowledge about careers, exams, skills, salaries, and educational paths. I can provide detailed information about any career field, exam preparation strategies, skill development, salary expectations, and growth opportunities. What specific topic would you like to explore in detail?"
+};
+
+const KEYWORD_MAPPING: Record<string, string> = {
+  // Career keywords
+  'software engineer': 'career_it',
+  'programmer': 'career_it',
+  'developer': 'career_it',
+  'data scientist': 'career_it',
+  'cloud': 'career_it',
+  'cybersecurity': 'career_it',
+  'ai': 'career_it',
+  'ml': 'career_it',
+  'machine learning': 'career_it',
+  'doctor': 'career_healthcare',
+  'nurse': 'career_healthcare',
+  'medical': 'career_healthcare',
+  'healthcare': 'career_healthcare',
+  'therapist': 'career_healthcare',
+  'pharmacist': 'career_healthcare',
+  'banker': 'career_finance',
+  'accountant': 'career_finance',
+  'finance': 'career_finance',
+  'investment': 'career_finance',
+  'financial': 'career_finance',
+  'engineer': 'career_engineering',
+  'civil': 'career_engineering',
+  'mechanical': 'career_engineering',
+  'electrical': 'career_engineering',
+  'teacher': 'career_education',
+  'professor': 'career_education',
+  'education': 'career_education',
+  'consultant': 'career_business',
+  'manager': 'career_business',
+  'business': 'career_business',
+  'entrepreneur': 'career_business',
+  'startup': 'career_business',
+  
+  // Exam keywords
+  'jee': 'exam_jee',
+  'neet': 'exam_neet',
+  'upsc': 'exam_upsc',
+  'cat': 'exam_cat',
+  'exam': 'exam_general',
+  'competitive': 'exam_general',
+  'test': 'exam_general',
+  'preparation': 'preparation_strategy',
+  
+  // Skill keywords
+  'programming': 'skill_technical',
+  'coding': 'skill_technical',
+  'python': 'skill_technical',
+  'java': 'skill_technical',
+  'web development': 'skill_technical',
+  'data analysis': 'skill_technical',
+  'communication': 'skill_communication',
+  'leadership': 'skill_leadership',
+  'teamwork': 'skill_soft',
+  'soft skills': 'skill_soft',
+  'problem solving': 'skill_soft',
+  
+  // Salary and growth
+  'salary': 'salary_general',
+  'salary growth': 'salary_general',
+  'earning': 'salary_general',
+  'growth': 'growth_outlook',
+  'career growth': 'growth_outlook',
+  
+  // Study tips
+  'study': 'study_tips',
+  'how to study': 'study_tips',
+  'study strategy': 'study_tips',
+  'learning': 'study_tips',
 };
 
 export default function AIMentorPage() {
@@ -24,7 +137,7 @@ export default function AIMentorPage() {
     {
       id: '1',
       role: 'assistant',
-      content: "Hello! 👋 I'm your AI Career Mentor. I'm here to help you with career guidance, exam preparation, syllabus information, and any other career-related questions. Feel free to ask me anything!",
+      content: "Hello! 👋 I'm your AI Career Mentor. I have comprehensive knowledge about careers, exams, skills, salaries, and educational paths. Ask me anything - from specific career details to exam preparation strategies, skill development, salary expectations, and more. I'm here to provide A to Z information to help you make informed career decisions!",
       timestamp: new Date()
     }
   ]);
@@ -43,16 +156,15 @@ export default function AIMentorPage() {
   const getAIResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
     
-    if (lowerMessage.includes('career') || lowerMessage.includes('job') || lowerMessage.includes('profession')) {
-      return SAMPLE_RESPONSES.career;
-    } else if (lowerMessage.includes('syllabus') || lowerMessage.includes('curriculum') || lowerMessage.includes('course')) {
-      return SAMPLE_RESPONSES.syllabus;
-    } else if (lowerMessage.includes('exam') || lowerMessage.includes('test') || lowerMessage.includes('preparation')) {
-      return SAMPLE_RESPONSES.exam;
-    } else if (lowerMessage.includes('skill') || lowerMessage.includes('learn') || lowerMessage.includes('develop')) {
-      return SAMPLE_RESPONSES.skill;
+    // Check keyword mapping for specific topics
+    for (const [keyword, responseKey] of Object.entries(KEYWORD_MAPPING)) {
+      if (lowerMessage.includes(keyword)) {
+        return COMPREHENSIVE_RESPONSES[responseKey];
+      }
     }
-    return SAMPLE_RESPONSES.default;
+    
+    // Fallback to default comprehensive response
+    return COMPREHENSIVE_RESPONSES.default;
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -86,10 +198,10 @@ export default function AIMentorPage() {
   };
 
   const suggestedQuestions = [
-    { icon: Briefcase, text: "What career should I choose?", category: "career" },
-    { icon: BookOpen, text: "How do I prepare for competitive exams?", category: "exam" },
-    { icon: Lightbulb, text: "What skills should I develop?", category: "skill" },
-    { icon: MessageCircle, text: "Tell me about JEE/NEET syllabus", category: "syllabus" }
+    { icon: Briefcase, text: "Tell me about IT careers", category: "career" },
+    { icon: BookOpen, text: "How do I prepare for JEE?", category: "exam" },
+    { icon: Lightbulb, text: "What technical skills should I learn?", category: "skill" },
+    { icon: MessageCircle, text: "What's the salary range for engineers?", category: "salary" }
   ];
 
   return (
@@ -97,7 +209,7 @@ export default function AIMentorPage() {
       <Header />
 
       {/* Hero Section */}
-      <section className="w-full max-w-[120rem] mx-auto px-6 py-16">
+      <section className="w-full max-w-[120rem] mx-auto px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -111,15 +223,15 @@ export default function AIMentorPage() {
             AI Career Mentor
           </h1>
           <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-            Ask any career-related questions and get instant, personalized guidance from our AI mentor. Free, unlimited, and always available.
+            Ask any career-related questions and get instant, comprehensive guidance from our AI mentor. A to Z information about careers, exams, skills, and more.
           </p>
         </motion.div>
       </section>
 
       {/* Chat Section */}
-      <section className="w-full flex-1 bg-background py-12">
+      <section className="w-full flex-1 bg-background py-8">
         <div className="max-w-[100rem] mx-auto px-6 h-full">
-          <div className="bg-white rounded-2xl shadow-lg h-[600px] flex flex-col overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg h-[500px] flex flex-col overflow-hidden">
             {/* Messages Container */}
             <div className="flex-1 overflow-y-auto p-8 space-y-6">
               <AnimatePresence>
@@ -244,10 +356,10 @@ export default function AIMentorPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: Briefcase, title: "Career Guidance", description: "Get personalized career recommendations based on your interests and skills" },
-              { icon: BookOpen, title: "Exam Preparation", description: "Learn strategies and tips for cracking competitive exams" },
-              { icon: Lightbulb, title: "Skill Development", description: "Discover which skills you need to develop for your target career" },
-              { icon: MessageCircle, title: "Syllabus Help", description: "Get detailed information about exam syllabi and course structures" }
+              { icon: Briefcase, title: "Career Guidance", description: "Explore 50+ careers with detailed information about roles, salaries, and requirements" },
+              { icon: BookOpen, title: "Exam Preparation", description: "Learn strategies for JEE, NEET, UPSC, CAT and other competitive exams" },
+              { icon: Lightbulb, title: "Skill Development", description: "Discover technical and soft skills needed for your target career" },
+              { icon: MessageCircle, title: "Salary & Growth", description: "Get comprehensive information about salary ranges and career growth opportunities" }
             ].map((feature, index) => {
               const Icon = feature.icon;
               return (

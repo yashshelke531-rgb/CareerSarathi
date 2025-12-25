@@ -28,6 +28,16 @@ export default function CareerComparePage() {
     return careers.filter(career => selectedCareers.includes(career._id));
   };
 
+  const handleCareerSelection = (careerId: string) => {
+    if (selectedCareers.includes(careerId)) {
+      // Deselect if already selected
+      toggleCareerSelection(careerId);
+    } else if (selectedCareers.length < 2) {
+      // Select if less than 2 are selected
+      toggleCareerSelection(careerId);
+    }
+  };
+
   const formatCurrency = (amount?: number) => {
     if (!amount) return 'N/A';
     return new Intl.NumberFormat('en-IN', {

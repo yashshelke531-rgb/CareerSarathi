@@ -83,7 +83,49 @@ export default function SkillTestPage() {
       "Creative Designer": { name: "Creative Designer", categories: ["creative", "communication", "preference"] },
       "Finance Manager": { name: "Finance Manager", categories: ["finance", "analytical", "business"] },
       "Teacher/Educator": { name: "Teacher/Educator", categories: ["teaching", "communication", "teamwork"] },
-      "Environmental Scientist": { name: "Environmental Scientist", categories: ["environment", "research", "analytical"] }
+      "Environmental Scientist": { name: "Environmental Scientist", categories: ["environment", "research", "analytical"] },
+      "Product Manager": { name: "Product Manager", categories: ["business", "communication", "problem-solving"] },
+      "UX/UI Designer": { name: "UX/UI Designer", categories: ["creative", "communication", "preference"] },
+      "Cloud Architect": { name: "Cloud Architect", categories: ["tech", "problem-solving", "analytical"] },
+      "Cybersecurity Specialist": { name: "Cybersecurity Specialist", categories: ["tech", "problem-solving", "security"] },
+      "AI/ML Engineer": { name: "AI/ML Engineer", categories: ["tech", "analytical", "research"] },
+      "DevOps Engineer": { name: "DevOps Engineer", categories: ["tech", "problem-solving", "teamwork"] },
+      "Investment Banker": { name: "Investment Banker", categories: ["finance", "business", "analytical"] },
+      "Accountant": { name: "Accountant", categories: ["finance", "analytical", "security"] },
+      "Marketing Manager": { name: "Marketing Manager", categories: ["business", "communication", "creative"] },
+      "HR Manager": { name: "HR Manager", categories: ["teamwork", "communication", "business"] },
+      "Consultant": { name: "Consultant", categories: ["business", "analytical", "communication"] },
+      "Entrepreneur": { name: "Entrepreneur", categories: ["business", "problem-solving", "security"] },
+      "Nurse": { name: "Nurse", categories: ["healthcare", "teamwork", "communication"] },
+      "Pharmacist": { name: "Pharmacist", categories: ["healthcare", "analytical", "communication"] },
+      "Therapist": { name: "Therapist", categories: ["healthcare", "communication", "teamwork"] },
+      "Researcher": { name: "Researcher", categories: ["research", "analytical", "problem-solving"] },
+      "Architect": { name: "Architect", categories: ["creative", "problem-solving", "analytical"] },
+      "Civil Engineer": { name: "Civil Engineer", categories: ["analytical", "problem-solving", "teamwork"] },
+      "Mechanical Engineer": { name: "Mechanical Engineer", categories: ["analytical", "problem-solving", "tech"] },
+      "Electrical Engineer": { name: "Electrical Engineer", categories: ["tech", "analytical", "problem-solving"] },
+      "Chemical Engineer": { name: "Chemical Engineer", categories: ["analytical", "research", "problem-solving"] },
+      "Journalist": { name: "Journalist", categories: ["communication", "creative", "research"] },
+      "Content Writer": { name: "Content Writer", categories: ["creative", "communication", "research"] },
+      "Social Media Manager": { name: "Social Media Manager", categories: ["communication", "creative", "business"] },
+      "Video Producer": { name: "Video Producer", categories: ["creative", "communication", "preference"] },
+      "Graphic Designer": { name: "Graphic Designer", categories: ["creative", "communication", "preference"] },
+      "Web Developer": { name: "Web Developer", categories: ["tech", "creative", "problem-solving"] },
+      "Mobile App Developer": { name: "Mobile App Developer", categories: ["tech", "problem-solving", "creative"] },
+      "Database Administrator": { name: "Database Administrator", categories: ["tech", "analytical", "problem-solving"] },
+      "Network Engineer": { name: "Network Engineer", categories: ["tech", "problem-solving", "analytical"] },
+      "Systems Administrator": { name: "Systems Administrator", categories: ["tech", "problem-solving", "teamwork"] },
+      "Quality Assurance Engineer": { name: "Quality Assurance Engineer", categories: ["tech", "analytical", "problem-solving"] },
+      "Business Intelligence Analyst": { name: "Business Intelligence Analyst", categories: ["analytical", "business", "tech"] },
+      "Supply Chain Manager": { name: "Supply Chain Manager", categories: ["business", "analytical", "teamwork"] },
+      "Operations Manager": { name: "Operations Manager", categories: ["business", "teamwork", "problem-solving"] },
+      "Project Manager": { name: "Project Manager", categories: ["business", "communication", "teamwork"] },
+      "Sales Manager": { name: "Sales Manager", categories: ["business", "communication", "teamwork"] },
+      "Customer Success Manager": { name: "Customer Success Manager", categories: ["communication", "teamwork", "business"] },
+      "Legal Advisor": { name: "Legal Advisor", categories: ["analytical", "communication", "research"] },
+      "Insurance Agent": { name: "Insurance Agent", categories: ["business", "communication", "finance"] },
+      "Real Estate Agent": { name: "Real Estate Agent", categories: ["business", "communication", "teamwork"] },
+      "Pilot": { name: "Pilot", categories: ["tech", "problem-solving", "security"] }
     };
 
     Object.entries(careerMappings).forEach(([_, career]) => {
@@ -99,7 +141,8 @@ export default function SkillTestPage() {
     });
 
     results.sort((a, b) => b.matchPercentage - a.matchPercentage);
-    setTestResults(results.slice(0, 5));
+    // Show all results without limiting to 5
+    setTestResults(results);
     setShowResults(true);
   };
 
@@ -354,13 +397,13 @@ export default function SkillTestPage() {
               className="bg-white p-8 rounded-xl text-center"
             >
               <div className="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="font-heading font-bold text-secondary-foreground">8+</span>
+                <span className="font-heading font-bold text-secondary-foreground">50+</span>
               </div>
               <h3 className="font-heading text-xl font-bold text-primary mb-2">
                 Career Matches
               </h3>
               <p className="font-paragraph text-base text-primary/70">
-                Personalized recommendations tailored to your profile
+                Unlimited career recommendations from 50+ options
               </p>
             </motion.div>
           </div>
