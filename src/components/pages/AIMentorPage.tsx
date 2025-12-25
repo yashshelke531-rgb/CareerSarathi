@@ -12,55 +12,79 @@ interface Message {
 }
 
 const COMPREHENSIVE_RESPONSES: Record<string, string> = {
+  // College and University Queries
+  college_maharashtra: "Top Engineering Colleges in Maharashtra: 1) IIT Bombay - Premier institute for engineering with excellent placements, 2) COEP Pune - Oldest engineering college in Asia with strong alumni network, 3) NIT Nagpur - National Institute of Technology with good infrastructure, 4) VJTI Mumbai - Veermata Jijabai Technological Institute with diverse programs, 5) MIT Pune - Maharashtra Institute of Technology with industry connections. Admission through JEE Main/Advanced. These colleges offer excellent placements (₹8-25+ lakhs), strong faculty, and industry partnerships. Would you like information about specific branches or placement statistics?",
+  
+  college_medical: "Top Medical Colleges in India: 1) AIIMS Delhi, Mumbai, Bangalore - Premier government medical institutes with world-class facilities, 2) CMC Vellore - Christian Medical College with excellent clinical training, 3) JIPMER Puducherry - Jawaharlal Institute of Postgraduate Medical Education and Research, 4) King George's Medical University Lucknow. For Maharashtra: Seth GS Medical College Mumbai, BJ Medical College Pune. Admission through NEET. These offer excellent clinical training, research opportunities, and strong faculty. Salary range: ₹3-30+ lakhs depending on specialization.",
+  
+  college_general: "College selection depends on: 1) Your field of interest (engineering, medical, management, arts), 2) Entrance exam scores (JEE, NEET, CAT), 3) Location preference, 4) Career goals. Consider: Accreditation and rankings, Faculty expertise, Placement records (average salary, companies recruiting), Campus facilities, Alumni network, Scholarship opportunities. Top colleges offer better placements, networking, and career growth. What field are you interested in?",
+  
   // Career-related responses
   career_general: "Careers are professional paths that align with your skills, interests, and values. There are thousands of career options across industries like IT, healthcare, finance, engineering, education, arts, and more. Each career has unique requirements, salary ranges, growth prospects, and work environments. I can help you explore specific careers, understand their requirements, and find the best fit for you.",
   
-  career_it: "IT careers include Software Engineer, Data Scientist, Cloud Architect, Cybersecurity Specialist, AI/ML Engineer, and more. These roles typically require strong problem-solving skills, programming knowledge, and continuous learning. Salaries are competitive, ranging from ₹4-20+ lakhs annually. Growth opportunities are excellent with high demand globally.",
+  career_it: "IT careers include Software Engineer, Data Scientist, Cloud Architect, Cybersecurity Specialist, AI/ML Engineer, and more. These roles typically require strong problem-solving skills, programming knowledge, and continuous learning. Salaries are competitive, ranging from ₹4-20+ lakhs annually. Growth opportunities are excellent with high demand globally. Top companies: Google, Microsoft, Amazon, TCS, Infosys. Specializations: Web Development, Mobile Apps, Cloud Computing, AI/ML, DevOps.",
   
-  career_healthcare: "Healthcare careers span doctors, nurses, therapists, pharmacists, medical researchers, and healthcare administrators. These require relevant degrees (MBBS, BNSc, etc.), compassion, and dedication. Salaries vary widely (₹3-30+ lakhs). Job security is excellent with consistent demand and opportunities for specialization.",
+  career_healthcare: "Healthcare careers span doctors, nurses, therapists, pharmacists, medical researchers, and healthcare administrators. These require relevant degrees (MBBS, BNSc, etc.), compassion, and dedication. Salaries vary widely (₹3-30+ lakhs). Job security is excellent with consistent demand and opportunities for specialization. Specializations: Surgery, Pediatrics, Cardiology, Psychiatry, Orthopedics. Work environment: Hospitals, clinics, research centers, NGOs.",
   
-  career_finance: "Finance careers include investment banker, financial analyst, accountant, insurance agent, and financial advisor. These require strong analytical skills, certifications (CA, CFA), and attention to detail. Salaries range from ₹4-25+ lakhs. Growth is steady with opportunities in banking, stock markets, and corporate finance.",
+  career_finance: "Finance careers include investment banker, financial analyst, accountant, insurance agent, and financial advisor. These require strong analytical skills, certifications (CA, CFA), and attention to detail. Salaries range from ₹4-25+ lakhs. Growth is steady with opportunities in banking, stock markets, and corporate finance. Top companies: Goldman Sachs, JP Morgan, ICICI Bank, HDFC Bank. Skills: Financial modeling, data analysis, market knowledge.",
   
-  career_engineering: "Engineering careers cover civil, mechanical, electrical, chemical, and software engineering. These require engineering degrees and technical expertise. Salaries range from ₹3-20+ lakhs. Opportunities exist in construction, manufacturing, power, and technology sectors with good growth prospects.",
+  career_engineering: "Engineering careers cover civil, mechanical, electrical, chemical, and software engineering. These require engineering degrees and technical expertise. Salaries range from ₹3-20+ lakhs. Opportunities exist in construction, manufacturing, power, and technology sectors with good growth prospects. Specializations: Structural engineering, Power systems, Automotive, Aerospace. Top companies: Larsen & Toubro, Bharat Heavy Electricals, Siemens.",
   
-  career_education: "Teaching and education careers include teachers, professors, educational consultants, and curriculum designers. These require teaching qualifications and subject expertise. Salaries range from ₹2-15+ lakhs. Job security is good with opportunities in schools, colleges, and online platforms.",
+  career_education: "Teaching and education careers include teachers, professors, educational consultants, and curriculum designers. These require teaching qualifications and subject expertise. Salaries range from ₹2-15+ lakhs. Job security is good with opportunities in schools, colleges, and online platforms. Specializations: K-12 teaching, Higher education, EdTech, Curriculum design. Growth: Online education, skill-based learning, corporate training.",
   
-  career_business: "Business careers include management consultant, business analyst, entrepreneur, and operations manager. These require business acumen, leadership skills, and often an MBA. Salaries range from ₹5-30+ lakhs. Growth is excellent with opportunities in startups and established companies.",
+  career_business: "Business careers include management consultant, business analyst, entrepreneur, and operations manager. These require business acumen, leadership skills, and often an MBA. Salaries range from ₹5-30+ lakhs. Growth is excellent with opportunities in startups and established companies. Top MBA colleges: IIM Ahmedabad, IIM Bangalore, XLRI, ISB. Skills: Strategic thinking, communication, analytical abilities.",
   
   // Exam-related responses
   exam_general: "Competitive exams are standardized tests that determine eligibility for higher education or government jobs. Major exams include JEE (engineering), NEET (medical), UPSC (civil services), CAT (MBA), and many others. Each exam has specific syllabi, difficulty levels, and preparation strategies. Success requires consistent study, practice, and strategic planning.",
   
-  exam_jee: "JEE (Joint Entrance Examination) has two levels: JEE Main and JEE Advanced. It's for engineering admission in top colleges like IITs. Syllabus covers Physics, Chemistry, and Mathematics. Preparation typically takes 1-2 years. Success rate is low (around 1-2%) due to high competition. Mock tests and previous year papers are essential.",
+  exam_jee: "JEE (Joint Entrance Examination) has two levels: JEE Main and JEE Advanced. It's for engineering admission in top colleges like IITs. Syllabus covers Physics, Chemistry, and Mathematics. Preparation typically takes 1-2 years. Success rate is low (around 1-2%) due to high competition. Mock tests and previous year papers are essential. Top colleges: IIT Bombay, IIT Delhi, IIT Madras, IIT Kanpur.",
   
-  exam_neet: "NEET (National Eligibility cum Entrance Test) is for medical and dental college admission. Syllabus includes Physics, Chemistry, and Biology. It's highly competitive with lakhs of applicants. Preparation requires 1-2 years of focused study. Coaching and consistent practice are crucial for success.",
+  exam_neet: "NEET (National Eligibility cum Entrance Test) is for medical and dental college admission. Syllabus includes Physics, Chemistry, and Biology. It's highly competitive with lakhs of applicants. Preparation requires 1-2 years of focused study. Coaching and consistent practice are crucial for success. Top colleges: AIIMS, CMC Vellore, JIPMER, State medical colleges.",
   
-  exam_upsc: "UPSC (Union Public Service Commission) conducts the Civil Services Examination for IAS, IPS, and IFS positions. It has three stages: Prelims, Mains, and Interview. Syllabus is vast covering history, geography, polity, economics, and current affairs. Preparation typically takes 1-2 years with strong current affairs knowledge essential.",
+  exam_upsc: "UPSC (Union Public Service Commission) conducts the Civil Services Examination for IAS, IPS, and IFS positions. It has three stages: Prelims, Mains, and Interview. Syllabus is vast covering history, geography, polity, economics, and current affairs. Preparation typically takes 1-2 years with strong current affairs knowledge essential. Success rate: 0.1-0.2% due to high competition.",
   
-  exam_cat: "CAT (Common Admission Test) is for MBA admission in top business schools. It tests quantitative ability, data interpretation, and verbal reasoning. Preparation takes 3-6 months. Success opens doors to high-paying management careers. Mock tests and time management are critical.",
+  exam_cat: "CAT (Common Admission Test) is for MBA admission in top business schools. It tests quantitative ability, data interpretation, and verbal reasoning. Preparation takes 3-6 months. Success opens doors to high-paying management careers. Mock tests and time management are critical. Top colleges: IIM Ahmedabad, IIM Bangalore, IIM Calcutta, XLRI, ISB.",
   
   // Skill-related responses
-  skill_technical: "Technical skills include programming (Python, Java, C++), web development, data analysis, cloud computing, and cybersecurity. These are in high demand across industries. Learning platforms like Coursera, Udemy, and CodeAcademy offer courses. Hands-on projects and certifications enhance employability.",
+  skill_technical: "Technical skills include programming (Python, Java, C++), web development, data analysis, cloud computing, and cybersecurity. These are in high demand across industries. Learning platforms like Coursera, Udemy, and CodeAcademy offer courses. Hands-on projects and certifications enhance employability. Popular certifications: AWS, Google Cloud, Microsoft Azure, Kubernetes.",
   
-  skill_soft: "Soft skills include communication, leadership, teamwork, problem-solving, and time management. These are crucial for career success and are valued by all employers. Development comes through practice, workshops, and real-world experience. They complement technical skills for holistic growth.",
+  skill_soft: "Soft skills include communication, leadership, teamwork, problem-solving, and time management. These are crucial for career success and are valued by all employers. Development comes through practice, workshops, and real-world experience. They complement technical skills for holistic growth. Importance: 85% of career success depends on soft skills.",
   
-  skill_communication: "Communication skills involve clear expression, active listening, and effective presentation. These are essential in every career. Improvement comes through practice, public speaking clubs, writing, and feedback. Strong communication leads to better opportunities and career advancement.",
+  skill_communication: "Communication skills involve clear expression, active listening, and effective presentation. These are essential in every career. Improvement comes through practice, public speaking clubs, writing, and feedback. Strong communication leads to better opportunities and career advancement. Methods: Toastmasters, online courses, mentorship, practice presentations.",
   
-  skill_leadership: "Leadership skills include decision-making, team management, motivation, and strategic thinking. These are developed through experience, training, and mentorship. Leaders inspire teams, drive innovation, and achieve organizational goals. Leadership development is crucial for career progression.",
+  skill_leadership: "Leadership skills include decision-making, team management, motivation, and strategic thinking. These are developed through experience, training, and mentorship. Leaders inspire teams, drive innovation, and achieve organizational goals. Leadership development is crucial for career progression. Development: Leadership programs, mentorship, taking on challenging projects.",
   
   // Salary and growth
-  salary_general: "Salaries vary widely based on education, experience, location, industry, and role. Entry-level positions typically offer ₹2-5 lakhs annually. Mid-level roles offer ₹8-15 lakhs. Senior positions offer ₹20+ lakhs. Specialized skills and certifications significantly boost earning potential.",
+  salary_general: "Salaries vary widely based on education, experience, location, industry, and role. Entry-level positions typically offer ₹2-5 lakhs annually. Mid-level roles offer ₹8-15 lakhs. Senior positions offer ₹20+ lakhs. Specialized skills and certifications significantly boost earning potential. Highest paying fields: Finance (₹5-25+ lakhs), IT (₹4-20+ lakhs), Consulting (₹10-30+ lakhs).",
   
-  growth_outlook: "Career growth depends on skill development, experience, and market demand. High-growth fields include IT, healthcare, finance, and renewable energy. Continuous learning, networking, and taking on challenging projects accelerate growth. Remote work and freelancing offer additional opportunities.",
+  growth_outlook: "Career growth depends on skill development, experience, and market demand. High-growth fields include IT, healthcare, finance, and renewable energy. Continuous learning, networking, and taking on challenging projects accelerate growth. Remote work and freelancing offer additional opportunities. Growth strategies: Certifications, higher education, skill development, job hopping, entrepreneurship.",
   
   // Study tips
-  study_tips: "Effective study strategies include: 1) Create a structured schedule, 2) Use active recall and spaced repetition, 3) Practice with previous year papers, 4) Join study groups, 5) Take regular breaks, 6) Stay consistent, 7) Review and revise regularly, 8) Manage stress through exercise and meditation.",
+  study_tips: "Effective study strategies include: 1) Create a structured schedule, 2) Use active recall and spaced repetition, 3) Practice with previous year papers, 4) Join study groups, 5) Take regular breaks, 6) Stay consistent, 7) Review and revise regularly, 8) Manage stress through exercise and meditation. Time management: 70% study, 20% practice, 10% revision.",
   
-  preparation_strategy: "Exam preparation requires: 1) Understanding the syllabus completely, 2) Creating a realistic timeline, 3) Using quality study materials, 4) Regular practice with mock tests, 5) Analyzing mistakes, 6) Staying updated with current affairs, 7) Managing time effectively, 8) Maintaining physical and mental health.",
+  preparation_strategy: "Exam preparation requires: 1) Understanding the syllabus completely, 2) Creating a realistic timeline, 3) Using quality study materials, 4) Regular practice with mock tests, 5) Analyzing mistakes, 6) Staying updated with current affairs, 7) Managing time effectively, 8) Maintaining physical and mental health. Success rate increases with: Consistency, quality coaching, peer support, mental health.",
   
-  default: "That's an interesting question! I'm your comprehensive AI Career Mentor with knowledge about careers, exams, skills, salaries, and educational paths. I can provide detailed information about any career field, exam preparation strategies, skill development, salary expectations, and growth opportunities. What specific topic would you like to explore in detail?"
+  default: "That's an interesting question! I'm your comprehensive AI Career Mentor with knowledge about careers, colleges, exams, skills, salaries, and educational paths. I can provide detailed information about any career field, college recommendations, exam preparation strategies, skill development, salary expectations, and growth opportunities. What specific topic would you like to explore in detail?"
 };
 
 const KEYWORD_MAPPING: Record<string, string> = {
+  // College keywords
+  'college': 'college_general',
+  'university': 'college_general',
+  'engineering college': 'college_maharashtra',
+  'maharashtra': 'college_maharashtra',
+  'mumbai': 'college_maharashtra',
+  'pune': 'college_maharashtra',
+  'iit': 'college_maharashtra',
+  'nit': 'college_maharashtra',
+  'coep': 'college_maharashtra',
+  'vjti': 'college_maharashtra',
+  'medical college': 'college_medical',
+  'aiims': 'college_medical',
+  'neet college': 'college_medical',
+  'best college': 'college_general',
+  'top college': 'college_general',
+  
   // Career keywords
   'software engineer': 'career_it',
   'programmer': 'career_it',

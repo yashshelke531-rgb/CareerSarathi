@@ -124,35 +124,59 @@ export default function HomePage() {
   const generateAIResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();
 
+    // College and University Queries
+    if (lowerMessage.includes('college') || lowerMessage.includes('university') || lowerMessage.includes('engineering college')) {
+      if (lowerMessage.includes('maharashtra') || lowerMessage.includes('mumbai') || lowerMessage.includes('pune')) {
+        return 'Top Engineering Colleges in Maharashtra: 1) IIT Bombay - Premier institute for engineering, 2) COEP Pune - Oldest engineering college in Asia, 3) NIT Nagpur - National Institute of Technology, 4) VJTI Mumbai - Veermata Jijabai Technological Institute, 5) MIT Pune - Maharashtra Institute of Technology. These colleges offer excellent placements, strong faculty, and industry connections. Admission is through JEE Main/Advanced. Would you like information about specific branches or placement statistics?';
+      }
+      if (lowerMessage.includes('medical college')) {
+        return 'Top Medical Colleges in India: 1) AIIMS Delhi, Mumbai, Bangalore - Premier government medical institutes, 2) CMC Vellore - Christian Medical College, 3) JIPMER Puducherry - Jawaharlal Institute of Postgraduate Medical Education and Research, 4) King George\'s Medical University Lucknow. Admission is through NEET. For Maharashtra: Seth GS Medical College Mumbai, BJ Medical College Pune. These offer excellent clinical training and research opportunities.';
+      }
+      return 'College selection depends on your field of interest, entrance exam scores, location preference, and career goals. Top colleges offer better placements, faculty, and networking opportunities. Consider factors like: 1) Accreditation and rankings, 2) Faculty expertise, 3) Placement records, 4) Campus facilities, 5) Alumni network. What field are you interested in - engineering, medical, management, or something else?';
+    }
+
+    // Engineering Career Queries
     if (lowerMessage.includes('engineer') || lowerMessage.includes('software') || lowerMessage.includes('developer')) {
-      return 'Software engineering is an excellent career choice! It offers strong growth potential, competitive salaries, and diverse opportunities across industries. Key skills include programming languages (Python, JavaScript, Java), problem-solving, and continuous learning. Would you like to know about specific specializations like web development, AI, or mobile apps?';
+      return 'Software engineering is an excellent career choice! It offers strong growth potential, competitive salaries (₹4-20+ lakhs), and diverse opportunities across industries. Key skills include programming languages (Python, JavaScript, Java), problem-solving, and continuous learning. Specializations: Web Development, Mobile Apps, Cloud Computing, AI/ML, DevOps. Top companies: Google, Microsoft, Amazon, TCS, Infosys. Would you like to know about specific specializations or learning paths?';
     }
 
-    if (lowerMessage.includes('doctor') || lowerMessage.includes('medical') || lowerMessage.includes('medicine')) {
-      return 'A medical career is highly rewarding and impactful. It requires dedication, strong academic performance, and excellent interpersonal skills. The path typically involves MBBS, followed by specialization. Consider factors like work-life balance, financial investment in education, and your passion for helping others. Would you like information about specific medical specializations?';
+    // Medical Career Queries
+    if (lowerMessage.includes('doctor') || lowerMessage.includes('medical') || lowerMessage.includes('medicine') || lowerMessage.includes('mbbs')) {
+      return 'A medical career is highly rewarding and impactful. It requires dedication, strong academic performance (NEET qualification), and excellent interpersonal skills. The path: MBBS (5.5 years) → Specialization (3-5 years). Specializations: Surgery, Pediatrics, Cardiology, Psychiatry, Orthopedics. Salary range: ₹3-30+ lakhs depending on specialization and location. Consider work-life balance, financial investment, and your passion for helping others. Would you like information about specific specializations?';
     }
 
-    if (lowerMessage.includes('business') || lowerMessage.includes('mba') || lowerMessage.includes('management')) {
-      return 'Business and management careers offer versatility and leadership opportunities. An MBA can open doors to roles in consulting, finance, marketing, and entrepreneurship. Key skills include strategic thinking, communication, and analytical abilities. Consider your interests: do you prefer finance, operations, marketing, or starting your own venture?';
+    // Business and MBA Queries
+    if (lowerMessage.includes('business') || lowerMessage.includes('mba') || lowerMessage.includes('management') || lowerMessage.includes('entrepreneur')) {
+      return 'Business and management careers offer versatility and leadership opportunities. MBA opens doors to consulting, finance, marketing, and entrepreneurship. Top MBA colleges: IIM Ahmedabad, IIM Bangalore, IIM Calcutta, XLRI, ISB. Admission through CAT. Salary: ₹15-50+ lakhs. Key skills: strategic thinking, communication, analytical abilities, leadership. For entrepreneurship: identify market gaps, validate ideas, secure funding, build teams. What interests you most - corporate management, finance, consulting, or starting your own venture?';
     }
 
-    if (lowerMessage.includes('skill') || lowerMessage.includes('strength') || lowerMessage.includes('talent')) {
-      return 'Understanding your skills is crucial for career planning! Consider both hard skills (technical abilities, certifications) and soft skills (communication, leadership, creativity). I recommend taking a skills assessment, reflecting on activities you enjoy, and seeking feedback from mentors. What areas do you feel most confident in?';
+    // Skill Development Queries
+    if (lowerMessage.includes('skill') || lowerMessage.includes('strength') || lowerMessage.includes('talent') || lowerMessage.includes('learn')) {
+      return 'Understanding your skills is crucial for career planning! Hard skills: programming, data analysis, design, languages. Soft skills: communication, leadership, creativity, teamwork, problem-solving. Development strategies: 1) Online courses (Coursera, Udemy, LinkedIn Learning), 2) Certifications (AWS, Google Cloud, Microsoft), 3) Projects and portfolio building, 4) Internships and real-world experience, 5) Mentorship and networking. What areas do you feel most confident in or want to develop?';
     }
 
-    if (lowerMessage.includes('exam') || lowerMessage.includes('test') || lowerMessage.includes('entrance')) {
-      return 'Entrance exams are gateways to many career paths. Popular exams include JEE for engineering, NEET for medical, CAT for MBA, and UPSC for civil services. Each requires dedicated preparation, understanding the syllabus, and consistent practice. Check out our Exams Information section for detailed guidance. Which field interests you most?';
+    // Exam Preparation Queries
+    if (lowerMessage.includes('exam') || lowerMessage.includes('test') || lowerMessage.includes('entrance') || lowerMessage.includes('jee') || lowerMessage.includes('neet') || lowerMessage.includes('upsc') || lowerMessage.includes('cat')) {
+      return 'Entrance exams are gateways to career paths: JEE (Engineering) - Physics, Chemistry, Math; NEET (Medical) - Physics, Chemistry, Biology; CAT (MBA) - Quantitative, Verbal, Data Interpretation; UPSC (Civil Services) - History, Geography, Polity, Economics. Preparation tips: 1) Understand syllabus completely, 2) Create study schedule, 3) Practice with mock tests, 4) Analyze mistakes, 5) Stay consistent, 6) Manage stress. Which exam are you preparing for?';
     }
 
-    if (lowerMessage.includes('salary') || lowerMessage.includes('pay') || lowerMessage.includes('income')) {
-      return 'Salary is an important consideration, but it varies widely by industry, location, experience, and specialization. Tech and finance typically offer high starting salaries, while fields like teaching or social work may start lower but offer other rewards. Focus on long-term growth potential and job satisfaction alongside compensation. What career fields are you considering?';
+    // Salary and Career Growth Queries
+    if (lowerMessage.includes('salary') || lowerMessage.includes('pay') || lowerMessage.includes('income') || lowerMessage.includes('earning')) {
+      return 'Salary varies by industry, location, experience, and specialization. Entry-level: ₹2-5 lakhs; Mid-level: ₹8-15 lakhs; Senior: ₹20+ lakhs. High-paying fields: IT (₹4-20+ lakhs), Finance (₹5-25+ lakhs), Consulting (₹10-30+ lakhs), Medicine (₹3-30+ lakhs). Growth factors: skills, certifications, experience, location (Bangalore, Mumbai, Delhi pay higher), company reputation. Focus on long-term growth, job satisfaction, and skill development alongside compensation. What field interests you?';
     }
 
-    if (lowerMessage.includes('change') || lowerMessage.includes('switch') || lowerMessage.includes('transition')) {
-      return 'Career transitions are increasingly common and can be very successful! Key steps include identifying transferable skills, gaining relevant certifications or education, networking in your target field, and possibly starting with internships or freelance work. What field are you considering moving into?';
+    // Career Change Queries
+    if (lowerMessage.includes('change') || lowerMessage.includes('switch') || lowerMessage.includes('transition') || lowerMessage.includes('pivot')) {
+      return 'Career transitions are increasingly common and successful! Steps: 1) Identify transferable skills, 2) Gain relevant certifications/education, 3) Network in target field, 4) Start with internships or freelance work, 5) Build portfolio, 6) Apply strategically. Examples: IT to Finance (analytical skills), Engineering to Management (leadership), Teaching to Corporate Training. What field are you considering moving into?';
     }
 
-    return 'That\'s an interesting question! Career planning involves understanding your interests, skills, values, and market opportunities. I can help you explore specific careers, understand educational requirements, compare different paths, or discuss skill development. What aspect of career planning would you like to focus on?';
+    // General Career Guidance
+    if (lowerMessage.includes('career') || lowerMessage.includes('job') || lowerMessage.includes('profession') || lowerMessage.includes('path')) {
+      return 'Career planning involves understanding your interests, skills, values, and market opportunities. Process: 1) Self-assessment (strengths, interests, values), 2) Research careers, 3) Explore education paths, 4) Gain experience (internships, projects), 5) Network and seek mentorship, 6) Make informed decisions. I can help with specific careers, educational requirements, salary expectations, skill development, or exam preparation. What aspect interests you most?';
+    }
+
+    // Default comprehensive response
+    return 'I\'m your AI Career Mentor with comprehensive knowledge about careers, colleges, exams, skills, and professional development. I can help with: 1) Career exploration and guidance, 2) College and university recommendations, 3) Exam preparation strategies, 4) Skill development and learning paths, 5) Salary expectations and career growth, 6) Career transitions and changes. Ask me about specific careers, colleges in your region, exam preparation, or any career-related question!';
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -206,7 +230,7 @@ export default function HomePage() {
       `}</style>
       <Header />
       {/* --- HERO SECTION --- */}
-      <section className="relative w-full min-h-screen flex flex-col justify-center pt-20 lg:pt-0 overflow-hidden">
+      <section className="relative w-full min-h-screen flex flex-col justify-center pt-0 lg:pt-0 overflow-hidden">
         {/* Background Elements */}
         <div className="absolute inset-0 z-0">
           <WavePattern />

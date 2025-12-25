@@ -164,10 +164,29 @@ export default function CareerComparePage() {
           )}
 
           {selectedCareers.length > 0 && (
-            <div className="text-center">
+            <div className="text-center space-y-4">
               <p className="font-paragraph text-base text-primary/70">
                 {selectedCareers.length === 2 ? '✓ Ready to compare!' : `Select ${2 - selectedCareers.length} more career(s) to compare`}
               </p>
+              {selectedCareers.length === 2 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-center"
+                >
+                  <button
+                    onClick={() => {
+                      const comparisonSection = document.getElementById('comparison-section');
+                      if (comparisonSection) {
+                        comparisonSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }}
+                    className="px-8 py-3 bg-secondary text-secondary-foreground font-paragraph font-semibold rounded-full hover:bg-secondary/90 transition-colors inline-flex items-center gap-2"
+                  >
+                    View Comparison <ArrowRight className="w-5 h-5" />
+                  </button>
+                </motion.div>
+              )}
             </div>
           )}
         </div>
@@ -175,7 +194,7 @@ export default function CareerComparePage() {
 
       {/* Comparison Section */}
       {selectedCareers.length === 2 && (
-        <section className="w-full py-20">
+        <section id="comparison-section" className="w-full py-20">
           <div className="max-w-[100rem] mx-auto px-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
