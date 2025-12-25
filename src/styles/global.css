@@ -3,3 +3,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Smooth scroll behavior across the entire site */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Ensure smooth scrolling works on all elements */
+* {
+  scroll-behavior: smooth;
+}

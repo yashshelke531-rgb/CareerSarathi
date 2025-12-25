@@ -21,11 +21,11 @@ export function ScrollToTop() {
       }, 100);
     } else {
       // URL without hash: Scroll to the top of the page
-      // Use smooth animation if same page, auto if different page
+      // Always use 'auto' for instant scroll to top on page load
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: isSamePage ? 'smooth' : 'auto'
+        behavior: 'auto'
       });
     }
 
