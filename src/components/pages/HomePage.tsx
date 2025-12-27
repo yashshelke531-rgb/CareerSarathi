@@ -423,7 +423,7 @@ export default function HomePage() {
                   </div>
 
                   {/* Chat Messages Area */}
-                  <div className="flex-1 overflow-y-auto p-8 space-y-6 chat-scroll bg-gradient-to-b from-white to-primary/5">
+                  <div className="flex-1 overflow-y-p-8 space-y-6 chat-scroll bg-gradient-to-b from-white to-primary/5">
                     <AnimatePresence initial={false}>
                       {messages.map((message) => (
                         <motion.div
