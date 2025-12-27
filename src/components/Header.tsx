@@ -44,7 +44,22 @@ export default function Header({ onMentorClick }: HeaderProps) {
             >
               Explore Careers
             </Link>
-
+            <Link
+              to="/skill-test"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/skill-test') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              Skill Test
+            </Link>
+            <Link
+              to="/career-compare"
+              className={`font-paragraph text-base transition-colors ${
+                isActive('/career-compare') ? 'text-primary font-semibold' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              Career Compare
+            </Link>
             <Link
               to="/exams"
               className={`font-paragraph text-base transition-colors ${
