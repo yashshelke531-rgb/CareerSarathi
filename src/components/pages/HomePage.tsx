@@ -240,26 +240,43 @@ export default function HomePage() {
         <div className="relative z-10 w-full max-w-[120rem] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center h-full">
           {/* Left Content */}
           <div className="lg:col-span-7 flex flex-col justify-center">
-            <motion.div 
-              style={{ opacity: opacityParallax }}
-              className="space-y-8"
-            >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/10 bg-white/30 backdrop-blur-sm w-fit">
+            <div className="space-y-8">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/10 bg-white/30 backdrop-blur-sm w-fit"
+              >
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium tracking-wide uppercase">AI-Powered Career Guidance</span>
-              </div>
+              </motion.div>
               
-              <h1 className="font-heading text-6xl lg:text-8xl font-bold leading-[0.9] tracking-tight text-primary">
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="font-heading text-6xl lg:text-8xl font-bold leading-[0.9] tracking-tight text-primary"
+              >
                 Your Trusted <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/60">Partner in</span> <br />
                 Career Growth
-              </h1>
+              </motion.h1>
               
-              <p className="font-paragraph text-xl lg:text-2xl text-primary/70 max-w-2xl leading-relaxed">
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="font-paragraph text-xl lg:text-2xl text-primary/70 max-w-2xl leading-relaxed"
+              >
                 Navigate the complexities of the professional world with intelligent insights, personalized mentorship, and data-driven pathways tailored just for you.
-              </p>
+              </motion.p>
 
-              <div className="flex flex-wrap gap-4 pt-4">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="flex flex-wrap gap-4 pt-4"
+              >
                 <Link
                   to="/explore"
                   className="group relative px-8 py-4 bg-primary text-primary-foreground font-heading text-lg rounded-full overflow-hidden transition-all hover:shadow-lg hover:scale-105"
@@ -276,8 +293,8 @@ export default function HomePage() {
                 >
                   Talk to Mentor
                 </a>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
 
           {/* Right Content - Abstract Visual Representation */}
