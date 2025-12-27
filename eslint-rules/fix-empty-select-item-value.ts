@@ -8,6 +8,7 @@ export default {
       description: 'Fix empty string values in SelectItem components',
       category: 'Possible Errors',
     },
+    
     fixable: 'code',
     schema: [],
     messages: {

@@ -1,4 +1,4 @@
-import useResizeObserver from "@react-hook/resize-observer"
+import useResizeObserver from "use-resize-observer"
 import { useLayoutEffect, useState } from "react"
 import '@/components/ui/image.css'
 
@@ -32,11 +32,13 @@ export const useSize = (ref: React.RefObject<HTMLElement>, threshold: number = 5
       }
   }, [ref.current, size])
 
-  useResizeObserver(ref, (entry) => {
-      const { width, height } = entry.contentRect
-      if (size.width !== width || size.height !== height) {
+  useResizeObserver({
+    ref,
+    onResize: ({ width = 0, height = 0 }: { width?: number; height?: number } = {}) => {
+      if (!size || size.width !== width || size.height !== height) {
         updateSize({ width, height })
       }
+    },
   })
 
   return size

@@ -49,6 +49,14 @@ export default defineConfig({
     plugins: [
       customErrorOverlayPlugin(),
     ],
+    server: {
+      hmr: {
+        protocol: 'ws',
+        host: 'localhost',
+        port: 3000,
+        clientPort: 3000,
+      },
+    },
   },
   adapter: isBuild ? cloudProviderFetchAdapter({}) : undefined,
   devToolbar: {
