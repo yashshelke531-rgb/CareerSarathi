@@ -1,23 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { BookOpen, Video, Calendar, Brain, TrendingUp, DollarSign, GraduationCap, ArrowRight, X } from 'lucide-react';
+import { BookOpen, Video, Calendar, Brain, TrendingUp, DollarSign, GraduationCap, ArrowRight, X, Search, CheckCircle, AlertCircle, Zap } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { BaseCrudService } from '@/integrations';
-import { UserGuidance, ExamsInformation } from '@/entities';
+import { UserGuidance, ExamsInformation, PopularCareers } from '@/entities';
 import { Image } from '@/components/ui/image';
+import { careersData } from '@/data/careersData';
 
 export default function GuidancePage() {
   const [guidanceItems, setGuidanceItems] = useState<UserGuidance[]>([]);
   const [exams, setExams] = useState<ExamsInformation[]>([]);
+  const [careers, setCareers] = useState<PopularCareers[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [loading, setLoading] = useState(true);
-  
-  // Initial AI Questions State
-  const [showInitialQuestions, setShowInitialQuestions] = useState(true);
-  const [initialAnswers, setInitialAnswers] = useState<Record<number, { label: string; interests: string[] }>>({});
-  const [userInterests, setUserInterests] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCareer, setSelectedCareer] = useState<PopularCareers | null>(null);
+  const [showCareerModal, setShowCareerModal] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -25,99 +25,34 @@ export default function GuidancePage() {
 
   const loadData = async () => {
     setLoading(true);
-    const [guidanceRes, examsRes] = await Promise.all([
-      BaseCrudService.getAll<UserGuidance>('userguidance'),
-      BaseCrudService.getAll<ExamsInformation>('examsinformation')
-    ]);
-    setGuidanceItems(guidanceRes.items);
-    setExams(examsRes.items);
+    try {
+      const [guidanceRes, examsRes, careersRes] = await Promise.all([
+        BaseCrudService.getAll<UserGuidance>('userguidance'),
+        BaseCrudService.getAll<ExamsInformation>('examsinformation'),
+        BaseCrudService.getAll<PopularCareers>('popularcareers')
+      ]);
+      setGuidanceItems(guidanceRes.items);
+      setExams(examsRes.items);
+      // Use CMS data if available, otherwise use local data
+      setCareers(careersRes.items && careersRes.items.length > 0 ? careersRes.items : careersData as any);
+    } catch (error) {
+      // Fallback to local data if CMS fails
+      setCareers(careersData as any);
+    }
     setLoading(false);
   };
 
-  // Initial AI Questions with career interest mapping
-  const initialQuestions = [
-    {
-      id: 1,
-      question: "Which field excites you the most?",
-      options: [
-        { label: "Technology & Software Development", interests: ["Technology", "IT", "Engineering"] },
-        { label: "Healthcare & Medical Sciences", interests: ["Healthcare", "Medical", "Science"] },
-        { label: "Business & Finance", interests: ["Business", "Finance", "Banking"] },
-        { label: "Creative & Design", interests: ["Creative", "Arts", "Design"] },
-        { label: "Education & Research", interests: ["Education", "Research", "Science"] }
-      ]
-    },
-    {
-      id: 2,
-      question: "What type of work activities do you enjoy most?",
-      options: [
-        { label: "Problem-solving & Analysis", interests: ["Engineering", "Technology", "Research"] },
-        { label: "Working with People & Communication", interests: ["Business", "Education", "Healthcare"] },
-        { label: "Creating & Building Things", interests: ["Engineering", "Creative", "Technology"] },
-        { label: "Data & Numbers", interests: ["Finance", "Business", "Technology"] },
-        { label: "Helping Others & Social Impact", interests: ["Healthcare", "Education", "Social"] }
-      ]
-    },
-    {
-      id: 3,
-      question: "What's your ideal career outcome?",
-      options: [
-        { label: "High earning potential & Career growth", interests: ["Finance", "Technology", "Business"] },
-        { label: "Job security & Stable income", interests: ["Government", "Banking", "Education"] },
-        { label: "Making a positive impact on society", interests: ["Healthcare", "Education", "Social"] },
-        { label: "Creative freedom & Self-expression", interests: ["Creative", "Arts", "Design"] },
-        { label: "Work-life balance & Flexibility", interests: ["Education", "Creative", "Freelance"] }
-      ]
-    }
-  ];
+  const filteredCareers = careers.filter(career =>
+    career.careerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    career.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const handleInitialAnswer = (questionId: number, option: { label: string; interests: string[] }) => {
-    setInitialAnswers({ ...initialAnswers, [questionId]: option });
-  };
-
-  const submitInitialQuestions = () => {
-    const answers = Object.values(initialAnswers);
-    if (answers.length === 3) {
-      // Aggregate all interests from selected options
-      const allInterests: string[] = [];
-      answers.forEach((answer: any) => {
-        if (answer.interests) {
-          allInterests.push(...answer.interests);
-        }
-      });
-      
-      // Count frequency of each interest to determine top interests
-      const interestCount: Record<string, number> = {};
-      allInterests.forEach(interest => {
-        interestCount[interest] = (interestCount[interest] || 0) + 1;
-      });
-      
-      // Get unique interests sorted by frequency
-      const topInterests = Object.entries(interestCount)
-        .sort((a, b) => b[1] - a[1])
-        .map(([interest]) => interest);
-      
-      setUserInterests(topInterests);
-      setShowInitialQuestions(false);
-    }
+  const handleCareerClick = (career: PopularCareers) => {
+    setSelectedCareer(career);
+    setShowCareerModal(true);
   };
 
 
-
-  const categories = ['All', ...Array.from(new Set(guidanceItems.map(item => item.category).filter(Boolean)))];
-
-  const filteredItems = selectedCategory === 'All'
-    ? guidanceItems
-    : guidanceItems.filter(item => item.category === selectedCategory);
-
-  const formatDate = (date?: Date | string) => {
-    if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
 
   const formatCurrency = (amount?: number) => {
     if (!amount) return 'N/A';
@@ -128,111 +63,203 @@ export default function GuidancePage() {
     }).format(amount);
   };
 
+  const formatDate = (date?: Date | string) => {
+    if (!date) return 'N/A';
+    return new Date(date).toLocaleDateString('en-IN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gradientstart to-gradientend">
       <Header />
 
-      {/* Initial AI Questions Modal */}
-      {showInitialQuestions && (
+      {/* Career Detail Modal */}
+      {showCareerModal && selectedCareer && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 overflow-y-auto"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-white rounded-2xl p-8 max-w-4xl w-full my-8"
           >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="font-heading text-3xl font-bold text-primary">
-                Let's Get to Know You
+            <div className="flex justify-between items-start mb-6">
+              <h2 className="font-heading text-4xl font-bold text-primary">
+                {selectedCareer.careerName}
               </h2>
               <button
-                onClick={() => setShowInitialQuestions(false)}
-                className="text-primary/60 hover:text-primary"
+                onClick={() => setShowCareerModal(false)}
+                className="text-primary/60 hover:text-primary flex-shrink-0"
               >
                 <X className="w-6 h-6" />
               </button>
             </div>
-            <p className="font-paragraph text-base text-primary/70 mb-8">
-              Answer these 3 quick questions to help us understand your interests and provide better guidance.
-            </p>
 
-            <div className="space-y-8">
-              {initialQuestions.map((q) => (
-                <div key={q.id}>
-                  <h3 className="font-heading text-lg font-semibold text-primary mb-4">
-                    {q.id}. {q.question}
-                  </h3>
-                  <div className="space-y-2">
-                    {q.options.map((option) => (
-                      <label key={option.label} className="flex items-center gap-3 cursor-pointer p-3 rounded-lg hover:bg-background transition-colors">
-                        <input
-                          type="radio"
-                          name={`question-${q.id}`}
-                          checked={initialAnswers[q.id]?.label === option.label}
-                          onChange={() => handleInitialAnswer(q.id, option)}
-                          className="w-4 h-4"
-                        />
-                        <span className="font-paragraph text-base text-primary">{option.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-background p-6 rounded-lg border-2 border-secondary">
+                <DollarSign className="w-6 h-6 text-primary mb-2" />
+                <p className="font-paragraph text-sm text-primary/70 mb-1">Average Salary</p>
+                <p className="font-heading text-2xl font-bold text-primary">
+                  {formatCurrency(selectedCareer.averageSalary)}
+                </p>
+              </div>
+              <div className="bg-background p-6 rounded-lg">
+                <TrendingUp className="w-6 h-6 text-primary mb-2" />
+                <p className="font-paragraph text-sm text-primary/70 mb-1">Growth Outlook</p>
+                <p className="font-heading text-2xl font-bold text-primary">
+                  {selectedCareer.growthOutlook}
+                </p>
+              </div>
+              <div className="bg-secondary p-6 rounded-lg">
+                <GraduationCap className="w-6 h-6 text-secondary-foreground mb-2" />
+                <p className="font-paragraph text-sm text-secondary-foreground/70 mb-1">Education Level</p>
+                <p className="font-heading text-lg font-bold text-secondary-foreground">
+                  {selectedCareer.educationalRequirements?.split(',')[0] || 'Varies'}
+                </p>
+              </div>
             </div>
 
-            <div className="flex gap-4 mt-8">
+            <div className="space-y-8 max-h-[60vh] overflow-y-auto pr-4">
+              {/* Overview */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5" />
+                  Overview
+                </h3>
+                <p className="font-paragraph text-base text-primary/80 leading-relaxed">
+                  {selectedCareer.description}
+                </p>
+              </div>
+
+              {/* Required Skills */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <Zap className="w-5 h-5" />
+                  Required Skills
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {selectedCareer.requiredSkills?.split(',').map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-secondary text-secondary-foreground font-paragraph text-sm font-semibold rounded-full"
+                    >
+                      {skill.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Educational Requirements */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5" />
+                  Educational Requirements
+                </h3>
+                <div className="bg-background p-4 rounded-lg">
+                  <p className="font-paragraph text-base text-primary/80">
+                    {selectedCareer.educationalRequirements}
+                  </p>
+                </div>
+              </div>
+
+              {/* Salary Information */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5" />
+                  Salary & Compensation
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-background p-4 rounded-lg">
+                    <p className="font-paragraph text-sm text-primary/70 mb-1">Average Salary</p>
+                    <p className="font-heading text-xl font-bold text-primary">
+                      {formatCurrency(selectedCareer.averageSalary)}
+                    </p>
+                  </div>
+                  <div className="bg-background p-4 rounded-lg">
+                    <p className="font-paragraph text-sm text-primary/70 mb-1">Annual Package</p>
+                    <p className="font-heading text-xl font-bold text-primary">
+                      {formatCurrency(selectedCareer.annualPackage)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Career Growth */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
+                  Career Growth & Opportunities
+                </h3>
+                <div className="bg-background p-4 rounded-lg">
+                  <p className="font-paragraph text-base text-primary/80 leading-relaxed">
+                    This career path shows <span className="font-semibold">{selectedCareer.growthOutlook?.toLowerCase()}</span> growth potential. 
+                    With the right skills and experience, professionals in this field can expect competitive compensation and diverse opportunities 
+                    across various industries. The demand for skilled professionals in this field continues to grow, making it an excellent choice 
+                    for career development.
+                  </p>
+                </div>
+              </div>
+
+              {/* Scope & Potential */}
+              <div>
+                <h3 className="font-heading text-2xl font-bold text-primary mb-3 flex items-center gap-2">
+                  <CheckCircle className="w-5 h-5" />
+                  Scope & Potential
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex gap-3 items-start">
+                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-paragraph font-semibold text-primary">Career Advancement</p>
+                      <p className="font-paragraph text-sm text-primary/70">Multiple pathways for growth and specialization</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 items-start">
+                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-paragraph font-semibold text-primary">Industry Demand</p>
+                      <p className="font-paragraph text-sm text-primary/70">High demand across multiple sectors and geographies</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 items-start">
+                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-paragraph font-semibold text-primary">Skill Development</p>
+                      <p className="font-paragraph text-sm text-primary/70">Continuous learning opportunities and certifications</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 items-start">
+                    <CheckCircle className="w-5 h-5 text-secondary flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="font-paragraph font-semibold text-primary">Entrepreneurial Opportunities</p>
+                      <p className="font-paragraph text-sm text-primary/70">Potential to start your own venture or consultancy</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 mt-8 pt-6 border-t border-primary/10">
               <button
-                onClick={() => setShowInitialQuestions(false)}
+                onClick={() => setShowCareerModal(false)}
                 className="flex-1 px-6 py-3 bg-primary/10 text-primary font-paragraph text-base font-semibold rounded-lg hover:bg-primary/20 transition-colors"
               >
-                Skip for Now
+                Close
               </button>
-              <button
-                onClick={submitInitialQuestions}
-                disabled={Object.keys(initialAnswers).length < 3}
-                className="flex-1 px-6 py-3 bg-primary text-primary-foreground font-paragraph text-base font-semibold rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+              <Link
+                to={`/career/${selectedCareer._id}`}
+                className="flex-1 px-6 py-3 bg-primary text-primary-foreground font-paragraph text-base font-semibold rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center justify-center gap-2"
               >
-                Continue
-              </button>
+                View Full Details <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </motion.div>
         </motion.div>
-      )}
-
-      {/* User Interests Display */}
-      {!showInitialQuestions && userInterests.length > 0 && (
-        <motion.section
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full bg-background py-8"
-        >
-          <div className="max-w-[100rem] mx-auto px-6">
-            <div className="bg-white rounded-xl p-6 border-2 border-secondary">
-              <h3 className="font-heading text-xl font-bold text-primary mb-4">
-                Your Career Interests
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {userInterests.map((interest) => (
-                  <span
-                    key={interest}
-                    className="px-4 py-2 bg-secondary text-secondary-foreground font-paragraph text-sm font-semibold rounded-full"
-                  >
-                    {interest}
-                  </span>
-                ))}
-              </div>
-              <button
-                onClick={() => setShowInitialQuestions(true)}
-                className="mt-4 px-4 py-2 text-primary font-paragraph text-sm font-semibold hover:underline"
-              >
-                Retake Questions
-              </button>
-            </div>
-          </div>
-        </motion.section>
       )}
 
       {/* Hero Section */}
@@ -243,340 +270,107 @@ export default function GuidancePage() {
           className="text-center"
         >
           <h1 className="font-heading text-6xl font-bold text-primary mb-4">
-            Career Guidance Resources
+            Career Guidance & Exploration
           </h1>
           <p className="font-paragraph text-xl text-primary/70 max-w-3xl mx-auto">
-            Comprehensive guides, tutorials, and insights to help you navigate your career journey with confidence.
+            Search and explore 100+ careers with comprehensive details including requirements, eligibility, salary, and growth potential.
           </p>
         </motion.div>
       </section>
 
-      {/* Skill Test & Career Comparison Section */}
+      {/* Career Search Section */}
       <section className="w-full bg-background py-12">
         <div className="max-w-[100rem] mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Skill Test Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-xl p-8 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Brain className="w-6 h-6 text-secondary-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-heading text-2xl font-bold text-primary mb-2">
-                    Skill Test
-                  </h3>
-                  <p className="font-paragraph text-base text-primary/70">
-                    Take a 15-question test to discover careers that match your skills and interests.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/skill-test"
-                className="w-full mt-4 px-6 py-3 bg-primary text-primary-foreground font-paragraph text-base font-semibold rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center justify-center gap-2"
-              >
-                Start Test <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            {/* Career Comparison Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white rounded-xl p-8 hover:shadow-lg transition-shadow"
-            >
-              <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-6 h-6 text-secondary-foreground" />
-                </div>
-                <div>
-                  <h3 className="font-heading text-2xl font-bold text-primary mb-2">
-                    Compare Careers
-                  </h3>
-                  <p className="font-paragraph text-base text-primary/70">
-                    Select two careers to compare salaries, skills, and growth opportunities.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/career-compare"
-                className="w-full mt-4 px-6 py-3 bg-secondary text-secondary-foreground font-paragraph text-base font-semibold rounded-lg hover:bg-secondary/90 transition-colors inline-flex items-center justify-center gap-2"
-              >
-                Compare Now <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white rounded-xl p-8 shadow-lg"
+          >
+            <h2 className="font-heading text-3xl font-bold text-primary mb-6">
+              Search for Your Dream Career
+            </h2>
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-primary/60" />
+              <input
+                type="text"
+                placeholder="Search careers (e.g., Engineering, Medical, Business, IT, Creative...)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 border-2 border-primary/20 rounded-lg font-paragraph text-base focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+            <p className="font-paragraph text-sm text-primary/60 mt-3">
+              Found {filteredCareers.length} career{filteredCareers.length !== 1 ? 's' : ''} matching your search
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      {/* Category Filter */}
-      <section className="w-full bg-background py-8">
-        <div className="max-w-[100rem] mx-auto px-6">
-          <div className="flex flex-wrap gap-3 justify-center">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-lg font-paragraph text-base font-semibold transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-white text-primary hover:bg-primary/10'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Guidance Items */}
+      {/* Career Search Results */}
       <section className="w-full py-20">
         <div className="max-w-[100rem] mx-auto px-6">
           {loading ? (
             <div className="text-center py-20">
               <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="font-paragraph text-lg text-primary">Loading guidance resources...</p>
+              <p className="font-paragraph text-lg text-primary">Loading careers...</p>
             </div>
-          ) : filteredItems.length === 0 ? (
+          ) : filteredCareers.length === 0 ? (
             <div className="text-center py-20">
+              <AlertCircle className="w-16 h-16 text-primary/40 mx-auto mb-4" />
               <p className="font-paragraph text-xl text-primary/70">
-                No guidance resources found in this category.
+                No careers found matching "{searchQuery}". Try searching with different keywords.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {filteredItems.map((item, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredCareers.map((career, index) => (
                 <motion.div
-                  key={item._id}
+                  key={career._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl overflow-hidden hover:shadow-xl transition-shadow"
+                  transition={{ delay: index * 0.05 }}
+                  onClick={() => handleCareerClick(career)}
+                  className="bg-white rounded-xl overflow-hidden hover:shadow-xl transition-all cursor-pointer group"
                 >
-                  {item.illustration && (
-                    <div className="h-64 overflow-hidden">
+                  {career.careerImage && (
+                    <div className="h-48 overflow-hidden relative">
                       <Image
-                        src={item.illustration}
-                        alt={item.title || 'Guidance'}
-                        className="w-full h-full object-cover"
-                        width={600}
+                        src={career.careerImage}
+                        alt={career.careerName || 'Career'}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        width={400}
                       />
                     </div>
                   )}
-                  <div className="p-8">
-                    {item.category && (
-                      <span className="inline-block px-3 py-1 bg-secondary text-secondary-foreground font-paragraph text-sm font-semibold rounded-full mb-3">
-                        {item.category}
-                      </span>
-                    )}
-                    <h2 className="font-heading text-3xl font-bold text-primary mb-4">
-                      {item.title}
-                    </h2>
-                    <p className="font-paragraph text-base text-primary/70 mb-6 leading-relaxed">
-                      {item.content}
+                  <div className="p-6">
+                    <h3 className="font-heading text-2xl font-bold text-primary mb-2">
+                      {career.careerName}
+                    </h3>
+                    <p className="font-paragraph text-base text-primary/70 mb-4 line-clamp-2">
+                      {career.description}
                     </p>
-
-                    <div className="flex items-center gap-6 mb-6">
-                      <div className="flex items-center gap-2 text-primary/60">
-                        <Calendar className="w-4 h-4" />
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-primary/80">
+                        <DollarSign className="w-4 h-4" />
                         <span className="font-paragraph text-sm">
-                          Updated: {formatDate(item.lastUpdated)}
+                          {formatCurrency(career.averageSalary)}
                         </span>
                       </div>
-                      {item.videoTutorialUrl && (
-                        <div className="flex items-center gap-2 text-primary/60">
-                          <Video className="w-4 h-4" />
-                          <span className="font-paragraph text-sm">Video Available</span>
-                        </div>
-                      )}
+                      <div className="flex items-center gap-2 text-primary/80">
+                        <TrendingUp className="w-4 h-4" />
+                        <span className="font-paragraph text-sm">
+                          {career.growthOutlook}
+                        </span>
+                      </div>
                     </div>
-
-                    {item.videoTutorialUrl && (
-                      <a
-                        href={item.videoTutorialUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-paragraph text-base font-semibold rounded-lg hover:bg-primary/90 transition-colors"
-                      >
-                        <Video className="w-5 h-5" />
-                        Watch Tutorial
-                      </a>
-                    )}
+                    <button className="w-full px-4 py-2 bg-primary text-primary-foreground font-paragraph text-sm font-semibold rounded-lg hover:bg-primary/90 transition-colors">
+                      View Details
+                    </button>
                   </div>
                 </motion.div>
               ))}
             </div>
           )}
-        </div>
-      </section>
-
-      {/* Exams Section */}
-      <section className="w-full bg-background py-20">
-        <div className="max-w-[100rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-5xl font-bold text-primary mb-4">
-              Important Exams & Certifications
-            </h2>
-            <p className="font-paragraph text-lg text-primary/70 max-w-3xl mx-auto">
-              Stay informed about key entrance exams and certification tests for your career path.
-            </p>
-          </div>
-
-          {exams.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="font-paragraph text-lg text-primary/70">
-                No exams information available at the moment.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {exams.map((exam, index) => (
-                <motion.div
-                  key={exam._id}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl p-8 hover:shadow-xl transition-shadow"
-                >
-                  <div className="flex items-start gap-6">
-                    {exam.examLogo && (
-                      <div className="flex-shrink-0">
-                        <Image
-                          src={exam.examLogo}
-                          alt={exam.examName || 'Exam'}
-                          className="w-20 h-20 object-contain"
-                          width={80}
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h3 className="font-heading text-2xl font-bold text-primary mb-3">
-                        {exam.examName}
-                      </h3>
-                      <p className="font-paragraph text-base text-primary/70 mb-4">
-                        {exam.description}
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                        <div className="flex items-center gap-2 text-primary/80">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-paragraph text-sm">
-                            Exam: {formatDate(exam.examDate)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-primary/80">
-                          <Calendar className="w-4 h-4" />
-                          <span className="font-paragraph text-sm">
-                            Deadline: {formatDate(exam.applicationDeadline)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-primary/80">
-                          <DollarSign className="w-4 h-4" />
-                          <span className="font-paragraph text-sm">
-                            Fee: {formatCurrency(exam.examFee)}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2 text-primary/80">
-                          <GraduationCap className="w-4 h-4" />
-                          <span className="font-paragraph text-sm">
-                            Eligibility Available
-                          </span>
-                        </div>
-                      </div>
-                      {exam.eligibilityCriteria && (
-                        <div className="bg-background p-3 rounded-lg mb-4">
-                          <p className="font-paragraph text-sm text-primary/70">
-                            <span className="font-semibold">Eligibility:</span> {exam.eligibilityCriteria}
-                          </p>
-                        </div>
-                      )}
-                      {exam.officialWebsite && (
-                        <a
-                          href={exam.officialWebsite}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 font-paragraph text-base text-primary font-semibold hover:underline"
-                        >
-                          Visit Official Website <ArrowRight className="w-4 h-4" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Additional Resources */}
-      <section className="w-full py-20">
-        <div className="max-w-[100rem] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="font-heading text-5xl font-bold text-primary mb-4">
-              Need More Help?
-            </h2>
-            <p className="font-paragraph text-lg text-primary/70 max-w-3xl mx-auto">
-              Our AI Career Mentor is available 24/7 to answer your questions and provide personalized guidance.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white p-8 rounded-xl text-center"
-            >
-              <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="w-8 h-8 text-secondary-foreground" />
-              </div>
-              <h3 className="font-heading text-2xl font-bold text-primary mb-3">
-                Comprehensive Guides
-              </h3>
-              <p className="font-paragraph text-base text-primary/70">
-                Step-by-step resources covering every aspect of career planning and development.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-white p-8 rounded-xl text-center"
-            >
-              <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Video className="w-8 h-8 text-secondary-foreground" />
-              </div>
-              <h3 className="font-heading text-2xl font-bold text-primary mb-3">
-                Video Tutorials
-              </h3>
-              <p className="font-paragraph text-base text-primary/70">
-                Visual learning materials to help you understand complex career concepts easily.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-white p-8 rounded-xl text-center"
-            >
-              <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
-                <Brain className="w-8 h-8 text-secondary-foreground" />
-              </div>
-              <h3 className="font-heading text-2xl font-bold text-primary mb-3">
-                AI-Powered Insights
-              </h3>
-              <p className="font-paragraph text-base text-primary/70">
-                Personalized career recommendations based on your skills, interests, and goals.
-              </p>
-            </motion.div>
-          </div>
         </div>
       </section>
 
